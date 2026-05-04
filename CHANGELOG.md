@@ -5,8 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [1.8.2] - 2026-05-04
 
 ### Fixed
-- **CI/CD — Android runner**: Changed `android-tests.yml` runner from `ubuntu-latest` to `macos-latest`. The `reactivecircus/android-emulator-runner` action requires a macOS host to enable hardware-accelerated (KVM-equivalent) x86_64 emulators; Ubuntu runners do not support this and cause emulator boot failures.
-- **CI/CD — iOS workflow cleanup**: Removed a stray trailing-space comment on the Allure results path in `ios-tests.yml` that could confuse artifact upload path resolution on some runner configurations.
+- **CI/CD — Android runner** (`android-tests.yml`): Changed `runs-on` from `ubuntu-latest` to `macos-latest`. The `reactivecircus/android-emulator-runner` action requires a macOS host for hardware-accelerated x86_64 emulation; Ubuntu runners do not support this and fail at emulator boot.
+- **CI/CD — iOS simulator listing** (`ios-tests.yml`): Replaced `xcrun xctrace list devices` with `xcrun simctl list devices available`. `xctrace list devices` enumerates Instruments profiling targets, not iOS simulators; `simctl` is the correct tool.
+- **CI/CD — iOS simulator version mismatch** (`ios-tests.yml`, `config.json`): `macOS-latest` runners ship Xcode 16+ with iOS 18 simulators. The previous `config.json` defaulted to `platformVersion: 16.0` / `deviceName: iPhone 14`, both unavailable on current runners, causing guaranteed session-creation failures. Updated defaults to `iOS 18.0` / `iPhone 16` and added `IOS_VERSION` and `IOS_DEVICE_NAME` env-var overrides in the workflow for explicit CI control.
+- **CI/CD — Missing `NODE_PATH` / `APPIUM_JS_PATH` exports** (both workflows): `AppiumServerManager` already supports these env vars to locate node and Appium when PATH lookup is unreliable inside nested script contexts (e.g., the emulator-runner shell). Both workflows now resolve and export these paths immediately after `npm install -g appium`.
+- **CI/CD — Missing app-path env vars** (both workflows): `config.json` falls back to `/path/to/your/app.apk` / `/path/to/your/app.app` when `ANDROID_APP_PATH` / `IOS_APP_PATH` are unset, causing an immediate `App not found` session failure in CI. Both workflows now declare these in the job `env:` block with placeholder values and comments.
 
 ### Changed
 - Bumped project version to `1.8.2`.
