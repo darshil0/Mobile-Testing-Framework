@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.2] - 2026-05-04
+
+### Added
+- **iOS Test Suite**: Created `IOSTest.java` with examples for Accessibility IDs and iOS Predicate Strings.
+- **Enhanced CI Binary Resolution**: Added explicit detection of `node` and `appium` paths in GitHub Actions workflows to overcome shell environment inconsistencies.
+
+### Fixed
+- **Appium Server Manager Hardening**: Added environment variable support (`NODE_PATH`, `APPIUM_JS_PATH`) and strict startup verification to `AppiumServerManager`.
+- **iOS CI Workflow**: Added a dedicated `ios-tests.yml` workflow for automated testing on macOS runners.
+
+### Changed
+- Bumped project version to `1.7.2`.
+
 ## [1.7.1] - 2026-05-04
 
 ### Fixed
