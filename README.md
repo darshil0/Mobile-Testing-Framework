@@ -14,7 +14,9 @@ An Appium + TestNG framework for automating Android and iOS apps. Built around t
 | `GestureHelper` | `src/main/java/utils/` | W3C Actions: swipe, tap, long-press |
 | `TestUtils` | `src/main/java/utils/` | Screenshots, safe clicks, key entry |
 | `ConfigReader` | `src/main/java/utils/` | Singleton JSON config with env-var resolution |
-| `TestListener` | `src/main/java/listeners/` | Logs test events; captures screenshot on failure |
+| `TestListener` | `src/main/java/listeners/` | Logs test events; captures screenshot on failure and attaches to Allure |
+| `RetryAnalyzer` | `src/main/java/listeners/` | Retries failed tests based on config |
+| `AppiumServerManager` | `src/main/java/utils/` | Programmatic start/stop of Appium server |
 | `DriverException` | `src/main/java/exceptions/` | Typed exception for driver lifecycle errors |
 
 ---
@@ -83,7 +85,8 @@ Edit `config/config.json`:
     "explicitWait": 30,
     "screenshotOnFailure": true,
     "noReset": true,
-    "fullReset": false
+    "fullReset": false,
+    "retryCount": 2
   }
 }
 ```
@@ -243,6 +246,11 @@ TestUtils.scrollToElement(driver, element, GestureHelper.Direction.DOWN);
 ```java
 AppiumDriver driver = DriverManager.getDriver();      // null if not initialized
 AppiumDriver driver = DriverManager.requireDriver();  // throws DriverException if null
+
+// WebView Context Switching
+DriverManager.switchToWebView();                      // switches to first available WebView
+DriverManager.switchToNativeContext();                // switches back to NATIVE_APP
+Set<String> contexts = DriverManager.getAvailableContexts();
 ```
 
 ---
@@ -257,11 +265,19 @@ xdg-open test-output/index.html   # Linux
 start test-output/index.html      # Windows
 ```
 
-Maven Surefire produces XML reports in `target/surefire-reports/` and an HTML summary:
-
-```bash
 mvn surefire-report:report
 open target/site/surefire-report.html
+```
+
+### Allure Reports
+
+The framework is integrated with Allure. Results are generated in `target/allure-results`.
+
+To generate and open the report:
+```bash
+# Install allure-commandline first: npm install -g allure-commandline
+allure generate target/allure-results --clean -o target/allure-report
+allure open target/allure-report
 ```
 
 `TestListener` captures a screenshot for every failed test and saves it to:
@@ -276,49 +292,34 @@ reports/screenshots/testName_FAILED_yyyyMMdd_HHmmss.png
 
 ### GitHub Actions
 
-```yaml
-name: Mobile Tests
+The repository includes a production-ready workflow in `.github/workflows/android-tests.yml`. It uses `android-emulator-runner` to provide a real hardware-accelerated environment.
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+```yaml
+name: Android Tests
+on: [push, pull_request]
 
 jobs:
-  android:
+  test:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { java-version: '11', distribution: 'temurin' }
+      
+      - name: Run Tests in Emulator
+        uses: reactivecircus/android-emulator-runner@v2
         with:
-          java-version: '11'
-          distribution: adopt
+          api-level: 31
+          script: |
+            appium &
+            mvn clean test -Dplatform=android
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install Appium
-        run: |
-          npm install -g appium@next
-          appium driver install uiautomator2
-
-      - name: Start Appium
-        run: appium &
-
-      - name: Run tests
-        run: mvn clean test -Dplatform=android
-
-      - name: Upload artifacts
+      - name: Upload Allure Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: test-reports
-          path: |
-            target/surefire-reports/
-            reports/screenshots/
+          name: allure-results
+          path: target/allure-results
 ```
 
 ### Jenkins
@@ -327,23 +328,23 @@ jobs:
 pipeline {
     agent any
     stages {
-        stage('Build') {
-            steps { sh 'mvn clean install -DskipTests' }
-        }
-        stage('Appium') {
+        stage('Setup') {
             steps {
-                sh 'appium &'
-                sleep(5)
+                sh 'mvn clean install -DskipTests'
+                sh 'npm install -g appium'
             }
         }
         stage('Test') {
-            steps { sh 'mvn test -Dplatform=android' }
+            steps {
+                // AppiumServerManager handles server lifecycle programmatically in v1.7.0+
+                sh 'mvn test -Dplatform=android'
+            }
         }
     }
     post {
         always {
-            publishHTML(reportDir: 'target/surefire-reports', reportFiles: 'index.html', reportName: 'Test Report')
-            archiveArtifacts artifacts: 'reports/screenshots/**/*.png'
+            allure includeProperties: false, results: [[path: 'target/allure-results']]
+            archiveArtifacts artifacts: 'reports/screenshots/**/*.png', allowEmptyArchive: true
         }
     }
 }

@@ -1,5 +1,6 @@
 package listeners;
 
+import io.qameta.allure.Attachment;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -110,9 +111,28 @@ public class TestListener implements ITestListener {
 
       FileUtils.copyFile(source, destFile);
       logger.info("Screenshot saved to: {}", destination);
+
+      // Attach to Allure
+      attachScreenshotToAllure(source);
     } catch (Exception e) {
       logger.error("Failed to take screenshot: {}", e.getMessage());
       logger.debug("Screenshot error details: ", e);
+    }
+  }
+
+  /**
+   * Attaches the given screenshot file to the Allure report.
+   *
+   * @param screenshot The screenshot file.
+   * @return The screenshot bytes for Allure.
+   */
+  @Attachment(value = "Failure Screenshot", type = "image/png")
+  private byte[] attachScreenshotToAllure(File screenshot) {
+    try {
+      return FileUtils.readFileToByteArray(screenshot);
+    } catch (Exception e) {
+      logger.error("Failed to attach screenshot to Allure: {}", e.getMessage());
+      return new byte[0];
     }
   }
 }

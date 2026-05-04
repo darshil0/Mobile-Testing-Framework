@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2026-05-04
+
+### Added
+- **Allure Reporting**: Integrated Allure TestNG for rich reporting. Screenshots are automatically attached to failed tests.
+- **Automatic Retries**: Added `RetryAnalyzer` and `AnnotationTransformer` to automatically retry failed tests based on `testSettings.retryCount` in `config.json`.
+- **WebView Support**: Added `switchToWebView`, `switchToNativeContext`, and `getAvailableContexts` to `DriverManager` for hybrid app testing.
+- **Appium Server Manager**: Added `AppiumServerManager` for programmatic control of the Appium server lifecycle.
+- **Improved WaitHelper**: `customWait` now returns the result of the condition for more fluent assertions.
+
+### Changed
+- Bumped project version to `1.7.0`.
+- Updated `TestListener` to support Allure attachments.
+- Updated `testng.xml` with new listeners for retries and reporting.
+
 ## [1.6.0] - 2026-05-04
 
 ### Added

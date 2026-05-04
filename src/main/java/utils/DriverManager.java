@@ -10,6 +10,7 @@ import io.appium.java_client.remote.options.BaseOptions;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,5 +142,38 @@ public class DriverManager {
         driver.remove();
       }
     }
+  }
+
+  /**
+   * Switches the driver context to WebView if available. If multiple WebViews are found, it
+   * switches to the first non-NATIVE_APP context.
+   */
+  public static void switchToWebView() {
+    AppiumDriver currentDriver = requireDriver();
+    Set<String> contexts = ((io.appium.java_client.remote.SupportsContextSwitching) currentDriver).getContextHandles();
+    for (String context : contexts) {
+      if (context.contains("WEBVIEW")) {
+        logger.info("Switching to context: {}", context);
+        ((io.appium.java_client.remote.SupportsContextSwitching) currentDriver).context(context);
+        return;
+      }
+    }
+    logger.warn("No WEBVIEW context found. Current contexts: {}", contexts);
+  }
+
+  /** Switches the driver context back to the native application. */
+  public static void switchToNativeContext() {
+    logger.info("Switching to NATIVE_APP context");
+    ((io.appium.java_client.remote.SupportsContextSwitching) requireDriver()).context("NATIVE_APP");
+  }
+
+  /**
+   * Gets the names of all available contexts (e.g., NATIVE_APP, WEBVIEW_...).
+   *
+   * @return A set of context names.
+   */
+  public static Set<String> getAvailableContexts() {
+    return ((io.appium.java_client.remote.SupportsContextSwitching) requireDriver())
+        .getContextHandles();
   }
 }
