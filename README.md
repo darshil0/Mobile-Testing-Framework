@@ -259,7 +259,7 @@ reports/screenshots/testName_FAILED_yyyyMMdd_HHmmss.png
 
 > **Important:** The Android workflow must use `runs-on: macos-latest`. The `reactivecircus/android-emulator-runner` action requires a macOS host to launch x86_64 hardware-accelerated emulators. Ubuntu runners do not support this and will fail at emulator boot.
 
-Appium server lifecycle is handled by `AppiumServerManager` (no manual `appium` command in the workflow).
+Appium server lifecycle is handled by `AppiumServerManager` (no manual `appium` command needed in the workflow). `NODE_PATH` and `APPIUM_JS_PATH` are exported after install so `AppiumServerManager` can locate the binaries reliably inside the emulator-runner shell context.
 
 ```yaml
 name: Android Tests
@@ -267,8 +267,11 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: macos-latest   # Required for hardware-accelerated Android emulator
+    runs-on: macos-latest   # Required: emulator-runner needs macOS for hardware-accelerated x86_64
     timeout-minutes: 45
+    env:
+      ANDROID_VERSION: "12.0"
+      ANDROID_APP_PATH: ${{ github.workspace }}/app/app-debug.apk  # Update to your APK path
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -289,6 +292,8 @@ jobs:
         run: |
           npm install -g appium
           appium driver install uiautomator2
+          echo "NODE_PATH=$(which node)" >> $GITHUB_ENV
+          echo "APPIUM_JS_PATH=$(npm root -g)/appium/build/lib/main.js" >> $GITHUB_ENV
 
       - name: Run Tests in Emulator
         uses: reactivecircus/android-emulator-runner@v2
@@ -296,10 +301,9 @@ jobs:
           api-level: 31
           target: google_apis
           arch: x86_64
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: |
-            mvn clean test -Dplatform=android
+          script: mvn clean test -Dplatform=android
 
       - name: Upload Allure Results
         if: always()
@@ -318,6 +322,8 @@ jobs:
 ### GitHub Actions (iOS)
 `.github/workflows/ios-tests.yml` runs tests on macOS runners with Xcode and XCUITest‑based capabilities.
 
+> **Important:** `macOS-latest` ships Xcode 16+ with iOS 18 simulators. Set `IOS_VERSION` and `IOS_DEVICE_NAME` env vars to match what's actually available on the runner — use `xcrun simctl list devices available` (not `xcrun xctrace`, which lists Instruments profiling targets, not simulators) to verify.
+
 ```yaml
 name: iOS Tests
 on: [push, pull_request]
@@ -326,6 +332,10 @@ jobs:
   test:
     runs-on: macos-latest
     timeout-minutes: 60
+    env:
+      IOS_VERSION: "18.0"
+      IOS_DEVICE_NAME: "iPhone 16"
+      IOS_APP_PATH: ${{ github.workspace }}/app/app-debug.app  # Update to your .app path
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -346,13 +356,14 @@ jobs:
         run: |
           npm install -g appium
           appium driver install xcuitest
+          echo "NODE_PATH=$(which node)" >> $GITHUB_ENV
+          echo "APPIUM_JS_PATH=$(npm root -g)/appium/build/lib/main.js" >> $GITHUB_ENV
 
-      - name: List iOS Simulators
-        run: xcrun xctrace list devices
+      - name: List Available iOS Simulators
+        run: xcrun simctl list devices available  # xcrun xctrace lists Instruments targets, not simulators
 
       - name: Run iOS Tests
-        run: |
-          mvn clean test -Dplatform=ios
+        run: mvn clean test -Dplatform=ios
 
       - name: Upload Allure Results
         if: always()
@@ -417,17 +428,23 @@ Use TestNG's `parallel="tests"` or `parallel="classes"` with `DriverManager`'s `
 - **`Connection refused` / session won't start** — Appium isn't running.  
   Start it with `appium`, then confirm: `curl http://127.0.0.1:4723/status`.
 
-- **`Device not found`** — Run `adb devices` (Android) or `xcrun xctrace list devices` (iOS). Start your emulator/simulator before tests.
+- **`Device not found`** — Run `adb devices` (Android) or `xcrun simctl list devices available` (iOS). Start your emulator/simulator before tests.
 
 - **`Port 4723 is already in use`** — Kill the existing process: `lsof -ti:4723 | xargs kill -9`, or start Appium on a different port and update `config.json` accordingly.
 
-- **`App not installed` / `App path not found`** — Use absolute paths in `config.json`. Check file permissions on the `.apk`/`.app`.
+- **`App not installed` / `App path not found`** — Use absolute paths in `config.json`. In CI, set the `ANDROID_APP_PATH` or `IOS_APP_PATH` env var in your workflow `env:` block. Check file permissions on the `.apk`/`.app`.
 
 - **`NoSuchElementException`** — Increase explicit wait timeouts in `config.json`. Use Appium Inspector to verify locators and check if the element is in a WebView context.
 
 - **`Could not create new session`** — Run `appium-doctor --android` or `--ios`. Update drivers: `appium driver update uiautomator2`.
 
 - **Android emulator fails to boot in CI** — Ensure `runs-on: macos-latest` in `android-tests.yml`. Ubuntu runners do not support hardware-accelerated x86_64 emulators with `reactivecircus/android-emulator-runner`.
+
+- **iOS session creation fails with `No device found` in CI** — `macOS-latest` runners ship Xcode 16+ with iOS 18 simulators, not iOS 16. Set `IOS_VERSION` and `IOS_DEVICE_NAME` env vars in your workflow to match available simulators. Run `xcrun simctl list devices available` in a workflow step to inspect what's on the runner.
+
+- **`xcrun xctrace list devices` shows no simulators** — Use `xcrun simctl list devices available` instead. `xctrace list devices` lists Instruments profiling targets, not iOS simulators.
+
+- **Appium fails to start in CI with `Cannot find node`** — Export `NODE_PATH` and `APPIUM_JS_PATH` to `$GITHUB_ENV` after installing Appium (see workflow examples). `AppiumServerManager` reads these env vars to locate the binaries when PATH lookup is unreliable inside nested shell contexts.
 
 For verbose logs: `mvn test -X`.
 
