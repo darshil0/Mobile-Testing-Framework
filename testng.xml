@@ -13,14 +13,11 @@
         </classes>
     </test>
     
-    <!-- Uncomment for iOS testing -->
-    <!--
     <test name="iOS Tests">
         <parameter name="platform" value="ios"/>
         <classes>
-            <class name="com.example.ExampleTest"/>
+            <class name="com.example.IOSTest"/>
         </classes>
     </test>
-    -->
     
 </suite>
