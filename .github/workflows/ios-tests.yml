@@ -49,7 +49,7 @@ jobs:
         run: xcrun simctl list devices available
 
       - name: Run iOS Tests
-        run: mvn clean test -Dplatform=ios
+        run: mvn clean test -Dplatform=ios -DsuiteXmlFile=testng-ios.xml
 
       - name: Upload Allure Results
         if: always()

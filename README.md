@@ -66,8 +66,9 @@ mvn clean test -Dplatform=ios
 # Single class
 mvn test -Dtest=ExampleTest
 
-# Custom suite file
-mvn test -DsuiteXmlFile=testng-smoke.xml
+# Custom suite file (Recommended for CI)
+mvn test -DsuiteXmlFile=testng-android.xml
+mvn test -DsuiteXmlFile=testng-ios.xml
 ```
 
 If you ever want to run Appium manually (e.g., for debugging), you can still do:

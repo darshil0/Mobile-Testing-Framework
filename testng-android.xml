@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Mobile Test Suite - Android" parallel="false" verbose="1">
+    <listeners>
+        <listener class-name="com.mobile.testing.listeners.TestListener"/>
+        <listener class-name="com.mobile.testing.listeners.AnnotationTransformer"/>
+    </listeners>
+
+    <test name="Android Tests">
+        <parameter name="platform" value="android"/>
+        <classes>
+            <class name="com.mobile.testing.tests.ExampleTest"/>
+        </classes>
+    </test>
+</suite>

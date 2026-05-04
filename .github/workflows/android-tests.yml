@@ -8,15 +8,8 @@ on:
 
 jobs:
   test:
-    # Required: reactivecircus/android-emulator-runner needs macOS for hardware-accelerated x86_64 emulation.
-    # ubuntu-latest does NOT support this and will fail at emulator boot.
-    runs-on: macos-latest
+    runs-on: macos-13
     timeout-minutes: 45
-
-    env:
-      # Override config.json defaults via the framework's env-var interpolation (${VAR:-default})
-      ANDROID_VERSION: "12.0"
-      ANDROID_APP_PATH: ${{ github.workspace }}/app/app-debug.apk  # Update to your actual APK path
 
     steps:
       - name: Checkout Repository
@@ -34,15 +27,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Appium and UiAutomator2 Driver
+      - name: Install Appium & Drivers
         run: |
           npm install -g appium
           appium driver install uiautomator2
-          appium driver list --installed
-          # Export explicit paths so AppiumServerManager (AppiumServiceBuilder) can locate
-          # node and appium reliably across all shell contexts inside the emulator-runner.
-          echo "NODE_PATH=$(which node)" >> $GITHUB_ENV
-          echo "APPIUM_JS_PATH=$(npm root -g)/appium/build/lib/main.js" >> $GITHUB_ENV
 
       - name: Run Android Tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -53,14 +41,19 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: mvn clean test -Dplatform=android
+          script: |
+            export NODE_PATH=$(which node)
+            export APPIUM_JS_PATH=$(npm list -g --parseable appium | head -n 1)/build/lib/main.js
+            echo "Using Node: $NODE_PATH"
+            echo "Using Appium JS: $APPIUM_JS_PATH"
+            mvn clean test -Dplatform=android
 
       - name: Upload Allure Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: target/allure-results/
+          path: target/allure-results
 
       - name: Upload Screenshots
         if: failure()
