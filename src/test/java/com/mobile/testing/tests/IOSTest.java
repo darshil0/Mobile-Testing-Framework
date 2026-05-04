@@ -1,10 +1,10 @@
-package com.example;
+package com.mobile.testing.tests;
 
 import io.appium.java_client.AppiumBy;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.WaitHelper;
+import com.mobile.testing.utils.WaitHelper;
 
 /**
  * Example test class for iOS platform.

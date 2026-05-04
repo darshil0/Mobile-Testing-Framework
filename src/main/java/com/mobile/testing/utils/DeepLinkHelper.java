@@ -1,4 +1,4 @@
-package utils;
+package com.mobile.testing.utils;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;

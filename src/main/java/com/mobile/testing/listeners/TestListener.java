@@ -1,4 +1,4 @@
-package listeners;
+package com.mobile.testing.listeners;
 
 import io.qameta.allure.Attachment;
 import java.io.File;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import utils.DriverManager;
+import com.mobile.testing.utils.DriverManager;
 
 /**
  * TestNG listener for logging test events and taking screenshots on failure. Handles test lifecycle

@@ -1,8 +1,8 @@
-package listeners;
+package com.mobile.testing.listeners;
 
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
-import utils.ConfigReader;
+import com.mobile.testing.utils.ConfigReader;
 
 /**
  * Implementation of IRetryAnalyzer to automatically retry failed tests.

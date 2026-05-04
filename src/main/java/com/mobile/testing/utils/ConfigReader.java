@@ -1,4 +1,4 @@
-package utils;
+package com.mobile.testing.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -15,6 +15,9 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  * Handles reading and parsing the configuration file (config.json). This class follows the
  * Singleton pattern to ensure only one instance is created.
@@ -25,7 +28,7 @@ public class ConfigReader {
   private JsonObject config;
 
   // Configuration file keys
-  private static final String CONFIG_FILE_PATH = Paths.get("config", "config.json").toString();
+  private static final String CONFIG_FILE_NAME = "config.json";
   private static final String ANDROID = "android";
   private static final String IOS = "ios";
   private static final String APPIUM = "appiumServer";
@@ -44,12 +47,17 @@ public class ConfigReader {
    * parses it into a JsonObject.
    */
   private ConfigReader() {
-    try (FileReader reader = new FileReader(CONFIG_FILE_PATH)) {
-      config = JsonParser.parseReader(reader).getAsJsonObject();
-      logger.info("Configuration loaded successfully from {}", CONFIG_FILE_PATH);
-    } catch (IOException e) {
-      logger.error("Failed to load configuration file: {}", CONFIG_FILE_PATH, e);
-      throw new RuntimeException("Failed to load config.json", e);
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
+      if (is == null) {
+        throw new RuntimeException("Resource not found: " + CONFIG_FILE_NAME);
+      }
+      try (InputStreamReader reader = new InputStreamReader(is)) {
+        config = JsonParser.parseReader(reader).getAsJsonObject();
+        logger.info("Configuration loaded successfully from classpath: {}", CONFIG_FILE_NAME);
+      }
+    } catch (Exception e) {
+      logger.error("Failed to load configuration file: {}", CONFIG_FILE_NAME, e);
+      throw new RuntimeException("Failed to load " + CONFIG_FILE_NAME, e);
     }
   }
 

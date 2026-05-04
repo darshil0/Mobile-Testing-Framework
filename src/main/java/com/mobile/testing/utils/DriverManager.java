@@ -1,6 +1,6 @@
-package utils;
+package com.mobile.testing.utils;
 
-import exceptions.DriverException;
+import com.mobile.testing.exceptions.DriverException;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;

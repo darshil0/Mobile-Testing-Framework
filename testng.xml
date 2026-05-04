@@ -2,21 +2,21 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Mobile Test Suite" parallel="false" verbose="1">
     <listeners>
-        <listener class-name="listeners.TestListener"/>
-        <listener class-name="listeners.AnnotationTransformer"/>
+        <listener class-name="com.mobile.testing.listeners.TestListener"/>
+        <listener class-name="com.mobile.testing.listeners.AnnotationTransformer"/>
     </listeners>
 
     <test name="Android Tests">
         <parameter name="platform" value="android"/>
         <classes>
-            <class name="com.example.ExampleTest"/>
+            <class name="com.mobile.testing.tests.ExampleTest"/>
         </classes>
     </test>
     
     <test name="iOS Tests">
         <parameter name="platform" value="ios"/>
         <classes>
-            <class name="com.example.IOSTest"/>
+            <class name="com.mobile.testing.tests.IOSTest"/>
         </classes>
     </test>
     

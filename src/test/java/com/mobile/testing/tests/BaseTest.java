@@ -1,4 +1,4 @@
-package com.example;
+package com.mobile.testing.tests;
 
 import io.appium.java_client.AppiumDriver;
 import java.net.MalformedURLException;
@@ -8,8 +8,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
-import utils.AppiumServerManager;
-import utils.DriverManager;
+import com.mobile.testing.utils.AppiumServerManager;
+import com.mobile.testing.utils.DriverManager;
 
 public class BaseTest {
   protected AppiumDriver driver;

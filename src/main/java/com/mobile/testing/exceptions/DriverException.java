@@ -1,4 +1,4 @@
-package exceptions;
+package com.mobile.testing.exceptions;
 
 public class DriverException extends RuntimeException {
 
