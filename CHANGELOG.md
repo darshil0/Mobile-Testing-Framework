@@ -72,23 +72,36 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.0] - 2025-11-15
 
-### Added / Changed / Fixed
-- 🚀 **Final Release:** Consolidates all recent fixes and improvements into a single, stable release.
-- 🔧 **Dependency Resolution:** Resolved critical dependency conflicts between Appium (`9.3.0`) and Selenium (`4.19.0`) to ensure a stable build.
-- 🔧 **Code Refactoring:** Refactored `BaseTest` to use the centralized `DriverManager`; updated `DriverManager` to use modern Appium 2.x `Options` and capabilities.
-- 🐛 **Bug Fixes:** Corrected `BaseTest` package declaration, import statements, and fixed a `NullPointerException` in `ConfigReader`.
-- 🔧 **Project Maintenance:** Corrected `.gitignore` filename and removed a redundant directory.
-- 📚 **Documentation:** Updated `README.md` with a detailed changelog and troubleshooting steps.
-- 🎨 **Formatting:** Applied the Google Java Format to the entire codebase for consistency.
+### Added
+- Consolidates all recent fixes and improvements into a single stable release.
+- Resolved critical dependency conflicts between Appium (9.3.0) and Selenium (4.19.0).
+- Refactored `BaseTest` to use centralized `DriverManager`.
+- Updated `DriverManager` to use modern Appium 2.x `Options` and capabilities.
+
+### Fixed
+- Corrected `BaseTest` package declaration and import statements.
+- Fixed `NullPointerException` in `ConfigReader`.
+- Corrected `.gitignore` filename and removed redundant directory.
+
+### Changed
+- Updated `README.md` with detailed changelog and troubleshooting steps.
+- Applied Google Java Format to the entire codebase.
 
 ## [1.4.0] - 2025-11-15
 
-### Added / Changed / Fixed
-- 🔧 **Dependency Resolution:** Resolved critical dependency conflicts between Appium (`9.3.0`) and Selenium (`4.19.0`) by downgrading Selenium and excluding transitive dependencies.
-- 🔧 **Code Refactoring:** Refactored `BaseTest` to use the centralized `DriverManager`; updated `DriverManager` to use modern Appium 2.x `Options` classes.
-- 🐛 **Bug Fixes:** Corrected `BaseTest` package declaration, import statements, and fixed a `NullPointerException` in `ConfigReader`.
-- 🔧 **Project Maintenance:** Corrected a typo in the `.gitignore` filename; removed a redundant `test` directory from `src/main`.
-- 📚 **Documentation:** Updated `README.md` with the latest changes and troubleshooting steps.
+### Added
+- Resolved critical dependency conflicts between Appium (9.3.0) and Selenium (4.19.0) by downgrading Selenium and excluding transitive dependencies.
+
+### Changed
+- Refactored `BaseTest` to use centralized `DriverManager`.
+- Updated `DriverManager` to use modern Appium 2.x `Options` classes.
+- Updated `README.md` with latest changes and troubleshooting steps.
+
+### Fixed
+- Corrected `BaseTest` package declaration and import statements.
+- Fixed `NullPointerException` in `ConfigReader`.
+- Corrected typo in `.gitignore` filename.
+- Removed redundant `test` directory from `src/main`.
 
 ## [1.3.0] - 2025-11-15
 

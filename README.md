@@ -197,7 +197,7 @@ WebElement item = WaitHelper.waitForPresence(driver, locator, 10);
 boolean gone = WaitHelper.waitForElementToDisappear(driver, locator, 10);
 boolean invisible = WaitHelper.waitForElementToBeInvisible(driver, element, 10);
 
-// Custom condition — returns the condition result (WebElement, Boolean, etc.)
+// Custom condition — returns the result (requires 'org.openqa.selenium.support.ui.ExpectedConditions')
 WebElement el = WaitHelper.customWait(driver, 10, ExpectedConditions.elementToBeClickable(locator));
 ```
 
@@ -233,7 +233,7 @@ TestUtils.clickElement(driver, element);      // waits for clickability first
 TestUtils.sendKeys(element, "some text");     // clears before typing
 TestUtils.waitForElement(driver, element, 10);
 TestUtils.scrollToElement(driver, element);   // defaults to UP
-TestUtils.scrollToElement(driver, element, Direction.DOWN);
+TestUtils.scrollToElement(driver, element, GestureHelper.Direction.DOWN);
 ```
 
 ### DriverManager
