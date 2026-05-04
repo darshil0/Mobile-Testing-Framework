@@ -1,5 +1,6 @@
 package utils;
 
+import exceptions.DriverException;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -107,14 +108,27 @@ public class DriverManager {
   /**
    * Gets the current Appium driver instance.
    *
-   * @return The Appium driver.
-   * @throws IllegalStateException If the driver is not initialized.
+   * <p>Returns {@code null} if the driver has not been initialized or has already been quit.
+   * Callers that require a live driver should use {@link #requireDriver()} instead.
+   *
+   * @return The Appium driver, or {@code null} if not initialized.
    */
   public static AppiumDriver getDriver() {
-    if (driver.get() == null) {
-      throw new IllegalStateException("Driver not initialized. Call initializeDriver() first.");
-    }
     return driver.get();
+  }
+
+  /**
+   * Gets the current Appium driver instance, throwing if it has not been initialized.
+   *
+   * @return The Appium driver.
+   * @throws DriverException If the driver has not been initialized.
+   */
+  public static AppiumDriver requireDriver() {
+    AppiumDriver currentDriver = driver.get();
+    if (currentDriver == null) {
+      throw new DriverException("Driver not initialized. Call initializeDriver() first.");
+    }
+    return currentDriver;
   }
 
   /** Quits the Appium driver and removes it from the ThreadLocal storage. */
