@@ -1,40 +1,36 @@
 # Mobile Testing Framework
-
 An Appium + TestNG framework for automating Android and iOS apps. Built around the Page Object Model, with centralized config, typed driver management, and automatic failure screenshots.
 
----
-
-## What's in the box
-
+***
+## What’s in the box
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| `DriverManager` | `src/main/java/com/mobile/testing/utils/` | Thread-safe driver initialization and contextual management |
+| `DriverManager` | `src/main/java/com/mobile/testing/utils/` | Thread‑safe driver initialization and contextual management |
 | `BaseTest` | `src/test/java/com/example/` | `@BeforeMethod`/`@AfterMethod` wiring |
 | `WaitHelper` | `src/main/java/com/mobile/testing/utils/` | Explicit waits for elements (visibility, clickability, etc.) |
-| `GestureHelper` | `src/main/java/com/mobile/testing/utils/` | W3C Actions: swipe, tap, long-press |
+| `GestureHelper` | `src/main/java/com/mobile/testing/utils/` | W3C Actions: swipe, tap, long‑press |
 | `TestUtils` | `src/main/java/com/mobile/testing/utils/` | Screenshots, safe clicks, key entry |
-| `ConfigReader` | `src/main/java/com/mobile/testing/utils/` | Singleton JSON config with env-var resolution |
+| `ConfigReader` | `src/main/java/com/mobile/testing/utils/` | Singleton JSON config with env‑var resolution |
 | `TestListener` | `src/main/java/com/mobile/testing/listeners/` | Logs test events; captures screenshot on failure and attaches to Allure |
 | `RetryAnalyzer` | `src/main/java/com/mobile/testing/listeners/` | Retries failed tests based on config |
 | `AppiumServerManager` | `src/main/java/com/mobile/testing/utils/` | Programmatic start/stop of Appium server |
 | `DeepLinkHelper` | `src/main/java/com/mobile/testing/utils/` | Opens deep link URLs on Android and iOS |
-| `VisualRegressionHelper`| `src/main/java/com/mobile/testing/utils/` | Baseline pixel-match image comparison |
+| `VisualRegressionHelper`| `src/main/java/com/mobile/testing/utils/` | Baseline pixel‑match image comparison |
 | `DriverException` | `src/main/java/com/mobile/testing/exceptions/` | Typed exception for driver lifecycle errors |
 
----
-
+***
 ## Prerequisites
-
 - Java 11+
 - Maven 3.6+
 - Node.js (required by Appium)
 - Appium 2.x — `npm install -g appium`
 - Appium UiAutomator2 driver — `appium driver install uiautomator2`
-- Appium XCUITest driver (iOS only) — `appium driver install xcuitest`
+- Appium XCUITest driver (iOS only) — `appium driver install xcuitest`  
 - Android Studio / SDK (Android)
 - Xcode (iOS, macOS only)
 
 Verify your environment:
+
 ```bash
 java -version
 mvn -version
@@ -42,35 +38,22 @@ appium -v
 appium-doctor --android   # or --ios
 ```
 
----
-
+***
 ## Setup
-
 ### 1. Clone and install
-
 ```bash
 git clone <repository-url>
 cd mobile-testing-framework
 mvn clean install
 ```
-
 ### 2. Configure your device
-
-## Configuration
-
 Configuration is managed via a JSON file located at `src/test/resources/config.json`.
-The framework supports environment variable interpolation out-of-the-box (`${VAR_NAME:-default}`).
- syntax. For example, setting `ANDROID_VERSION=14.0` in the environment overrides `platformVersion` without touching the file.
+The framework supports environment variable interpolation out‑of‑the‑box (`${VAR_NAME:-default}`) syntax.  
+For example, setting `ANDROID_VERSION=14.0` in the environment overrides `platformVersion` without touching the file.
+### 3. Run tests
+You do **not** need to manually start Appium; `AppiumServerManager` (integrated into `BaseTest` as of `v1.7.0+`) handles server lifecycle automatically. [linkedin](https://www.linkedin.com/pulse/testng-mobile-automation-best-practices-innovations-2025-dave-balroop-bp82c)
 
-### 3. Start Appium
-
-```bash
-appium
-# or on a custom port
-appium --address 127.0.0.1 --port 4723
-```
-
-### 4. Run tests
+Run tests:
 
 ```bash
 # All tests (defaults to Android)
@@ -87,14 +70,18 @@ mvn test -Dtest=ExampleTest
 mvn test -DsuiteXmlFile=testng-smoke.xml
 ```
 
----
+If you ever want to run Appium manually (e.g., for debugging), you can still do:
 
+```bash
+appium
+# or on a custom port
+appium --address 127.0.0.1 --port 4723
+```
+
+***
 ## Project structure
-
 ```
 mobile-testing-framework/
-├── config/
-│   └── config.json
 ├── src/
 │   ├── main/java/
 │   │   ├── exceptions/
@@ -106,10 +93,10 @@ mobile-testing-framework/
 │   │       ├── DriverManager.java
 │   │       ├── GestureHelper.java
 │   │       ├── TestUtils.java
-│   │       └── WaitHelper.java
-│   └── test/java/com/example/
-│       ├── BaseTest.java
-│       └── ExampleTest.java
+│   │       ├── WaitHelper.java
+│   ├── test/java/com/example/
+│   │   ├── BaseTest.java
+│   │   └── ExampleTest.java
 ├── reports/
 │   └── screenshots/
 ├── pom.xml
@@ -117,11 +104,9 @@ mobile-testing-framework/
 └── README.md
 ```
 
----
-
+***
 ## Writing tests
-
-Extend `BaseTest`. The `platform` parameter is wired through `testng.xml` and defaults to `android` when absent.
+Extend `BaseTest`. The `platform` parameter is wired through `testng.xml` and defaults to `"android"` when absent.
 
 ```java
 package com.mobile.testing.tests;
@@ -149,9 +134,7 @@ public class LoginTest extends BaseTest {
     }
 }
 ```
-
 ### WaitHelper
-
 All wait methods return the located `WebElement` — no second `findElement` call needed.
 
 ```java
@@ -172,9 +155,7 @@ boolean invisible = WaitHelper.waitForElementToBeInvisible(driver, element, 10);
 // Custom condition — returns the result (requires 'org.openqa.selenium.support.ui.ExpectedConditions')
 WebElement el = WaitHelper.customWait(driver, 10, ExpectedConditions.elementToBeClickable(locator));
 ```
-
 ### GestureHelper
-
 ```java
 // Directional swipes
 GestureHelper.swipeUp(driver);
@@ -196,9 +177,7 @@ GestureHelper.longPress(driver, element, Duration.ofSeconds(3));
 GestureHelper.scrollToElement(driver, element);
 GestureHelper.scrollToElement(driver, element, GestureHelper.Direction.DOWN);
 ```
-
 ### TestUtils
-
 ```java
 TestUtils.takeScreenshot(driver, "checkout_page");
 TestUtils.clickElement(driver, element);      // waits for clickability first
@@ -210,34 +189,33 @@ TestUtils.scrollToElement(driver, element, GestureHelper.Direction.DOWN);
 // Deep linking
 TestUtils.openDeepLink(driver, "myapp://profile");
 ```
-
 ### Visual Regression
-
 ```java
 // Compares current screen with "home_screen.png" in src/test/resources/baselines/
 // Auto-saves baseline if missing. Allows 1.5% pixel difference tolerance.
-boolean matches = VisualRegressionHelper.verifyScreen(driver, "home_screen", 1.5);
+boolean matches = VisualRegressionHelper.verifyScreen(
+    driver,
+    "home_screen",
+    1.5
+);
 Assert.assertTrue(matches, "Visual mismatch detected");
 ```
-
 ### DriverManager
-
-`getDriver()` returns `null` when no session is active — safe for use in listeners and teardown code. Use `requireDriver()` when the test logic genuinely requires an active session and should fail loudly if one isn't present.
+`getDriver()` returns `null` when no session is active — safe for use in listeners and teardown code.  
+Use `requireDriver()` when the test logic genuinely requires an active session and should fail loudly if one isn’t present.
 
 ```java
 AppiumDriver driver = DriverManager.getDriver();      // null if not initialized
 AppiumDriver driver = DriverManager.requireDriver();  // throws DriverException if null
 
-// WebView Context Switching
+// WebView context switching
 DriverManager.switchToWebView();                      // switches to first available WebView
 DriverManager.switchToNativeContext();                // switches back to NATIVE_APP
 Set<String> contexts = DriverManager.getAvailableContexts();
 ```
 
----
-
+***
 ## Test reporting
-
 TestNG writes HTML reports to `test-output/` after each run:
 
 ```bash
@@ -245,18 +223,25 @@ open test-output/index.html       # macOS
 xdg-open test-output/index.html   # Linux
 start test-output/index.html      # Windows
 ```
+### Surefire‑style HTML report
+You can also generate a Maven‑style Surefire report:
 
+```bash
 mvn surefire-report:report
 open target/site/surefire-report.html
 ```
-
 ### Allure Reports
+The framework is integrated with Allure. Results are generated in `target/allure-results`.  
+First install Allure CLI (often via npm):
 
-The framework is integrated with Allure. Results are generated in `target/allure-results`.
-
-To generate and open the report:
 ```bash
-# Install allure-commandline first: npm install -g allure-commandline
+# Install allure-commandline first
+npm install -g allure-commandline
+```
+
+Generate and open the report:
+
+```bash
 allure generate target/allure-results --clean -o target/allure-report
 allure open target/allure-report
 ```
@@ -267,13 +252,11 @@ allure open target/allure-report
 reports/screenshots/testName_FAILED_yyyyMMdd_HHmmss.png
 ```
 
----
-
+***
 ## CI/CD
-
-### GitHub Actions
-
-The repository includes a production-ready workflow in `.github/workflows/android-tests.yml`. It uses `android-emulator-runner` to provide a real hardware-accelerated environment.
+### GitHub Actions (Android)
+`.github/workflows/android-tests.yml` runs hardware‑accelerated Android emulator tests using `reactivecircus/android-emulator-runner`. [github](https://github.com/marketplace/actions/android-emulator-runner)
+Appium server lifecycle is handled by `AppiumServerManager` (no manual `appium` command in the workflow).
 
 ```yaml
 name: Android Tests
@@ -282,17 +265,37 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: macos-latest
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with: { java-version: '11', distribution: 'temurin' }
-      
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Appium & UiAutomator2 driver
+        run: |
+          npm install -g appium
+          appium driver install uiautomator2
+
       - name: Run Tests in Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 31
+          target: google_apis
+          arch: x86_64
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
           script: |
-            appium &
             mvn clean test -Dplatform=android
 
       - name: Upload Allure Results
@@ -300,11 +303,69 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: target/allure-results
+          path: target/allure-results/
+
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots
+          path: reports/screenshots/
 ```
+### GitHub Actions (iOS)
+`.github/workflows/ios-tests.yml` runs tests on macOS runners with Xcode and XCUITest‑based capabilities.
 
+```yaml
+name: iOS Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Appium & XCUITest driver
+        run: |
+          npm install -g appium
+          appium driver install xcuitest
+
+      - name: List iOS Simulators
+        run: xcrun xctrace list devices
+
+      - name: Run iOS Tests
+        run: |
+          mvn clean test -Dplatform=ios
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-ios
+          path: target/allure-results/
+
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots-ios
+          path: reports/screenshots/
+```
 ### Jenkins
-
 ```groovy
 pipeline {
     agent any
@@ -331,61 +392,50 @@ pipeline {
 }
 ```
 
----
-
+***
 ## Parallel execution
+Use TestNG’s `parallel="tests"` or `parallel="classes"` with `DriverManager`’s `ThreadLocal` storage so each thread owns its own driver instance with no contention. [linkedin](https://www.linkedin.com/pulse/testng-mobile-automation-best-practices-innovations-2025-dave-balroop-bp82c)
 
 ```xml
 <suite name="Parallel Suite" parallel="tests" thread-count="2">
     <test name="Android">
         <parameter name="platform" value="android"/>
-        <classes><class name="com.example.ExampleTest"/></classes>
+        lasses>lass name="com.example.ExampleTest"/></classes>
     </test>
     <test name="iOS">
         <parameter name="platform" value="ios"/>
-        <classes><class name="com.example.ExampleTest"/></classes>
+        lasses>lass name="com.example.ExampleTest"/></classes>
     </test>
 </suite>
 ```
 
-`DriverManager` uses `ThreadLocal` storage, so each thread gets its own driver instance with no contention.
-
----
-
+***
 ## Troubleshooting
+- **`Connection refused` / session won’t start** — Appium isn’t running.  
+  Start it with `appium`, then confirm: `curl http://127.0.0.1:4723/status`.
 
-**`Connection refused` / session won't start** — Appium isn't running. Start it with `appium`, then confirm it's up: `curl http://127.0.0.1:4723/status`.
+- **`Device not found`** — Run `adb devices` (Android) or `xcrun xctrace list devices` (iOS). Start your emulator/simulator before tests.
 
-**`Device not found`** — Run `adb devices` (Android) or `xcrun xctrace list devices` (iOS). Start your emulator/simulator before launching tests.
+- **`Port 4723 is already in use`** — Kill the existing process: `lsof -ti:4723 | xargs kill -9`, or start Appium on a different port and update `config.json` accordingly.
 
-**`Port 4723 is already in use`** — Kill the existing process: `lsof -ti:4723 | xargs kill -9`, or start Appium on a different port with `appium --port 4724` and update `config.json` accordingly.
+- **`App not installed` / `App path not found`** — Use absolute paths in `config.json`. Check file permissions on the `.apk`/`.app`.
 
-**`App not installed` / `App path not found`** — Use absolute paths in `config.json`. Check file permissions on the `.apk`/`.app`.
+- **`NoSuchElementException`** — Increase explicit wait timeouts in `config.json`. Use Appium Inspector to verify locators and check if the element is in a WebView context.
 
-**`NoSuchElementException`** — Increase explicit wait timeouts in `config.json`. Use Appium Inspector to verify locators. Check whether the element is in a WebView context rather than the native layer.
+- **`Could not create new session`** — Run `appium-doctor --android` or `--ios`. Update drivers: `appium driver update uiautomator2`.
 
-**`Could not create new session`** — Run `appium-doctor --android` or `appium-doctor --ios` to diagnose environment issues. Update drivers: `appium driver update uiautomator2`.
+For verbose logs: `mvn test -X`.
 
-For verbose Maven output: `mvn test -X`.
-
----
-
+***
 ## Best practices
+- **Locators** — prefer accessibility IDs and resource IDs over XPath. When XPath is unavoidable, use relative paths. Store locators as constants in a separate class.
+- **Waits** — use explicit waits exclusively. Avoid `Thread.sleep()`. `WaitHelper`‑style utility methods help keep tests fast and resilient. [testmuai](https://www.testmuai.com/blog/appium-with-testng-tutorial/)
+- **Test isolation** — each test should set up and clean up its own state. Avoid order‑dependent tests.
+- **Data** — externalize test inputs to JSON or properties files. Use `@DataProvider` and keep credentials in environment variables.
+- **Performance** — set `noReset: true` in `config.json` to skip app reinstallation between tests when the state does not require a clean install.
 
-**Locators** — prefer accessibility IDs and resource IDs over XPath. When XPath is unavoidable, use relative paths. Store locators as constants in a separate class rather than scattering strings through test methods.
-
-**Waits** — use explicit waits exclusively. `Thread.sleep()` makes tests slow and brittle; `WebDriverWait` with a meaningful condition is always the right choice.
-
-**Test isolation** — each test should set up and clean up its own state. Tests that rely on execution order are fragile.
-
-**Data** — externalise test inputs to JSON or properties files. Use `@DataProvider` for parameterised cases. Keep credentials in environment variables.
-
-**Performance** — set `noReset: true` in `config.json` to skip app reinstallation between tests when state doesn't require a clean install.
-
----
-
-## Data-driven testing
-
+***
+## Data‑driven testing
 ```java
 @DataProvider(name = "credentials")
 public Object[][] credentials() {
@@ -401,32 +451,29 @@ public void testLogin(String email, String password) {
 }
 ```
 
----
-
+***
 ## Contributing
+1. Fork and create a feature branch: `git checkout -b feature/your-feature`.
+2. Make changes and run `mvn test` to confirm nothing breaks.
+3. Format: `mvn fmt:format`.
+4. Commit with a clear message and open a pull request.
 
-1. Fork and create a feature branch: `git checkout -b feature/your-feature`
-2. Make changes and run `mvn test` to confirm nothing breaks
-3. Format: `mvn fmt:format`
-4. Commit with a clear message and open a pull request
+For bugs, open a GitHub Issue with:
+- Steps to reproduce.
+- Device/OS details.
+- Relevant logs.
 
-For bugs, open a GitHub Issue with steps to reproduce, device/OS details, and relevant logs.
-
----
-
+***
 ## Resources
-
 - [Appium docs](https://appium.io/docs/en/latest/)
 - [TestNG docs](https://testng.org/doc/documentation-main.html)
 - [Selenium docs](https://www.selenium.dev/documentation/)
 - [Appium Discuss](https://discuss.appium.io/)
 
----
-
+***
 ## License
+MIT — see [`LICENSE`](LICENSE) for details.
 
-MIT — see [LICENSE](LICENSE) for details.
-
----
+***
 
 *Made with ❤️ by Darshil*
