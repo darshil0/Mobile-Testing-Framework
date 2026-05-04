@@ -42,6 +42,10 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
+            export NODE_PATH=$(which node)
+            export APPIUM_JS_PATH=$(npm list -g --parseable appium | head -n 1)/build/lib/main.js
+            echo "Using Node: $NODE_PATH"
+            echo "Using Appium JS: $APPIUM_JS_PATH"
             mvn clean test -Dplatform=android
 
       - name: Upload Allure Results

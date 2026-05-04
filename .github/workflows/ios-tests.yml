@@ -40,6 +40,10 @@ jobs:
           # The simulator is typically started automatically by Appium/XCUITest
           # but you can pre-start it if needed:
           # xcrun simctl boot "iPhone 15" || true
+          export NODE_PATH=$(which node)
+          export APPIUM_JS_PATH=$(npm list -g --parseable appium | head -n 1)/build/lib/main.js
+          echo "Using Node: $NODE_PATH"
+          echo "Using Appium JS: $APPIUM_JS_PATH"
           mvn clean test -Dplatform=ios
 
       - name: Upload Allure Results

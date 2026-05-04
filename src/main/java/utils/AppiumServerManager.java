@@ -19,14 +19,31 @@ public class AppiumServerManager {
     if (service == null || !service.isRunning()) {
       logger.info("Starting Appium server...");
       AppiumServiceBuilder builder = new AppiumServiceBuilder();
+      
+      // CI Hardening: Ensure we find node and appium in different environments
+      String nodePath = System.getenv("NODE_PATH");
+      String appiumJSPath = System.getenv("APPIUM_JS_PATH");
+      
+      if (nodePath != null) builder.usingDriverExecutable(new File(nodePath));
+      if (appiumJSPath != null) builder.withAppiumJS(new File(appiumJSPath));
+      
       builder.withIPAddress("127.0.0.1");
       builder.usingAnyFreePort();
       builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
       builder.withArgument(GeneralServerFlag.LOG_LEVEL, "info");
 
       service = AppiumDriverLocalService.buildService(builder);
-      service.start();
-      logger.info("Appium server started on: {}", service.getUrl());
+      logger.info("Starting Appium server on 127.0.0.1...");
+      try {
+        service.start();
+        if (!service.isRunning()) {
+          throw new RuntimeException("Appium server failed to start!");
+        }
+        logger.info("Appium server started successfully on: {}", service.getUrl());
+      } catch (Exception e) {
+        logger.error("CRITICAL: Failed to start Appium server. Error: {}", e.getMessage(), e);
+        throw e;
+      }
     }
   }
 
