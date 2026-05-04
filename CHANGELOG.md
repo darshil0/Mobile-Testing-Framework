@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.8.3] - 2026-05-04
 
 ### Fixed
-- **CI/CD — Android runner** (`android-tests.yml`): Standardized `NODE_PATH` and `APPIUM_JS_PATH` exports and updated the test command to use the dedicated `testng-android.xml` suite for better control.
+- **CI/CD — Android runner** (`android-tests.yml`): Reverted `runs-on` to `macos-13` to ensure compatibility with `x86_64` emulators, standardized `NODE_PATH` and `APPIUM_JS_PATH` exports, and updated the test command to use the dedicated `testng-android.xml` suite.
 - **Documentation** (`README.md`): Synchronized the project structure diagram with the actual `com.mobile.testing` package naming and updated GitHub Actions examples to reflect the latest test commands.
 
 ### Added
