@@ -85,14 +85,14 @@ public class TestListener implements ITestListener {
   }
 
   /**
-   * Takes a screenshot and saves it to the reports/screenshots directory. Uses DriverManager to
-   * access the current driver instance.
+   * Takes a screenshot and saves it to the reports/screenshots directory. Uses {@link
+   * DriverManager#getDriver()} which returns {@code null} safely when no driver is active.
    *
-   * @param testName The name of the test to use in the screenshot filename.
+   * @param testName The name of the test, used in the screenshot filename.
    */
   private void takeScreenshot(String testName) {
     try {
-      // Check if driver is available
+      // DriverManager.getDriver() returns null when driver is not initialized — safe to check here
       if (DriverManager.getDriver() == null) {
         logger.warn("Cannot take screenshot - driver is null");
         return;
@@ -102,7 +102,7 @@ public class TestListener implements ITestListener {
       File source = screenshot.getScreenshotAs(OutputType.FILE);
 
       String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-      String fileName = testName + "_" + timestamp + ".png";
+      String fileName = testName + "_FAILED_" + timestamp + ".png";
       String destination = "reports/screenshots/" + fileName;
 
       File destFile = new File(destination);

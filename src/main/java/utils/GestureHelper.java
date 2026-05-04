@@ -12,13 +12,13 @@ import org.openqa.selenium.interactions.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Utility class for performing touch gestures. */
+/** Utility class for performing touch gestures using the W3C Actions API. */
 public class GestureHelper {
   private static final Logger logger = LoggerFactory.getLogger(GestureHelper.class);
   private static final Duration SWIPE_DURATION = Duration.ofMillis(1000);
 
   /**
-   * Swipes up on the screen.
+   * Swipes up on the screen (from 80% to 20% of screen height).
    *
    * @param driver The Appium driver.
    */
@@ -31,7 +31,7 @@ public class GestureHelper {
   }
 
   /**
-   * Swipes down on the screen.
+   * Swipes down on the screen (from 20% to 80% of screen height).
    *
    * @param driver The Appium driver.
    */
@@ -44,7 +44,7 @@ public class GestureHelper {
   }
 
   /**
-   * Swipes left on the screen.
+   * Swipes left on the screen (from 80% to 20% of screen width).
    *
    * @param driver The Appium driver.
    */
@@ -57,7 +57,7 @@ public class GestureHelper {
   }
 
   /**
-   * Swipes right on the screen.
+   * Swipes right on the screen (from 20% to 80% of screen width).
    *
    * @param driver The Appium driver.
    */
@@ -122,7 +122,19 @@ public class GestureHelper {
   }
 
   /**
-   * Long presses on the center of an element for a given duration.
+   * Long presses on the center of an element for the given number of seconds. Convenience overload
+   * of {@link #longPress(AppiumDriver, WebElement, Duration)}.
+   *
+   * @param driver The Appium driver.
+   * @param element The element to long press.
+   * @param seconds The duration of the long press in seconds.
+   */
+  public static void longPress(AppiumDriver driver, WebElement element, int seconds) {
+    longPress(driver, element, Duration.ofSeconds(seconds));
+  }
+
+  /**
+   * Long presses on the center of an element for the given duration.
    *
    * @param driver The Appium driver.
    * @param element The element to long press.
@@ -149,7 +161,7 @@ public class GestureHelper {
   }
 
   /**
-   * Scrolls to an element by swiping up until the element is in view.
+   * Scrolls to an element by swiping up until the element is visible.
    *
    * @param driver The Appium driver.
    * @param element The element to scroll to.
@@ -160,7 +172,7 @@ public class GestureHelper {
       int maxScrolls = 10;
       int scrollCount = 0;
 
-      while (!isElementInView(driver, element) && scrollCount < maxScrolls) {
+      while (!isElementInView(element) && scrollCount < maxScrolls) {
         swipeUp(driver);
         scrollCount++;
       }
@@ -180,7 +192,7 @@ public class GestureHelper {
     return new Point(location.x + size.width / 2, location.y + size.height / 2);
   }
 
-  private static boolean isElementInView(AppiumDriver driver, WebElement element) {
+  private static boolean isElementInView(WebElement element) {
     try {
       return element.isDisplayed();
     } catch (Exception e) {
