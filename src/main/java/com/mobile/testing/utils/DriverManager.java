@@ -52,14 +52,18 @@ public class DriverManager {
       options.setAppActivity(config.getPlatformCapability(ANDROID, "appActivity"));
       options.setAutoGrantPermissions(
           config.getPlatformBooleanCapability(ANDROID, "autoGrantPermissions", true));
-          
+
       // Add custom grid/cloud capabilities (e.g. bstack:options, sauce:options)
       java.util.Map<String, Object> extraCaps = config.getPlatformCapabilities(ANDROID);
-      extraCaps.forEach((k, v) -> {
-          if (!"appPackage".equals(k) && !"appActivity".equals(k) && !"autoGrantPermissions".equals(k) && !"platformName".equals(k)) {
+      extraCaps.forEach(
+          (k, v) -> {
+            if (!"appPackage".equals(k)
+                && !"appActivity".equals(k)
+                && !"autoGrantPermissions".equals(k)
+                && !"platformName".equals(k)) {
               options.setCapability(k, v);
-          }
-      });
+            }
+          });
 
       logger.info("Creating AndroidDriver with URL: {}", appiumUrl);
       driver.set(new AndroidDriver(appiumUrl, options));
@@ -70,14 +74,17 @@ public class DriverManager {
       options.setBundleId(config.getPlatformCapability(IOS, "bundleId"));
       options.setAutoAcceptAlerts(
           config.getPlatformBooleanCapability(IOS, "autoAcceptAlerts", true));
-          
+
       // Add custom grid/cloud capabilities
       java.util.Map<String, Object> extraCaps = config.getPlatformCapabilities(IOS);
-      extraCaps.forEach((k, v) -> {
-          if (!"bundleId".equals(k) && !"autoAcceptAlerts".equals(k) && !"platformName".equals(k)) {
+      extraCaps.forEach(
+          (k, v) -> {
+            if (!"bundleId".equals(k)
+                && !"autoAcceptAlerts".equals(k)
+                && !"platformName".equals(k)) {
               options.setCapability(k, v);
-          }
-      });
+            }
+          });
 
       logger.info("Creating IOSDriver with URL: {}", appiumUrl);
       driver.set(new IOSDriver(appiumUrl, options));
@@ -103,7 +110,8 @@ public class DriverManager {
     options.setPlatformVersion(config.getPlatformCapability(platform, "platformVersion"));
     options.setAutomationName(config.getPlatformCapability(platform, "automationName"));
 
-    options.setCapability("appium:deviceName", config.getPlatformCapability(platform, "deviceName"));
+    options.setCapability(
+        "appium:deviceName", config.getPlatformCapability(platform, "deviceName"));
     options.setCapability("appium:app", config.getPlatformCapability(platform, "app"));
     options.setCapability("appium:noReset", config.isNoReset());
     options.setCapability("appium:fullReset", config.isFullReset());
@@ -170,7 +178,8 @@ public class DriverManager {
    */
   public static void switchToWebView() {
     AppiumDriver currentDriver = requireDriver();
-    Set<String> contexts = ((io.appium.java_client.remote.SupportsContextSwitching) currentDriver).getContextHandles();
+    Set<String> contexts =
+        ((io.appium.java_client.remote.SupportsContextSwitching) currentDriver).getContextHandles();
     for (String context : contexts) {
       if (context.contains("WEBVIEW")) {
         logger.info("Switching to context: {}", context);

@@ -12,9 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * General-purpose test utility methods: screenshot capture, safe element interactions, and
- * scroll helpers. All methods are stateless and accept the driver explicitly so they remain safe
- * for use in multi-threaded / parallel execution contexts.
+ * General-purpose test utility methods: screenshot capture, safe element interactions, and scroll
+ * helpers. All methods are stateless and accept the driver explicitly so they remain safe for use
+ * in multi-threaded / parallel execution contexts.
  */
 public class TestUtils {
   private static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
@@ -130,9 +130,10 @@ public class TestUtils {
   public static void openDeepLink(AppiumDriver driver, String url) {
     ConfigReader config = ConfigReader.getInstance();
     String platformName = driver.getCapabilities().getPlatformName().toString();
-    String appPackage = "android".equalsIgnoreCase(platformName)
-        ? config.getPlatformCapability("android", "appPackage")
-        : config.getPlatformCapability("ios", "bundleId");
+    String appPackage =
+        "android".equalsIgnoreCase(platformName)
+            ? config.getPlatformCapability("android", "appPackage")
+            : config.getPlatformCapability("ios", "bundleId");
 
     DeepLinkHelper.openDeepLink(driver, url, appPackage);
   }

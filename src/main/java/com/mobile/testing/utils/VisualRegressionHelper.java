@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility for basic visual regression testing.
- * Compares current screen state against a baseline image.
+ * Utility for basic visual regression testing. Compares current screen state against a baseline
+ * image.
  */
 public class VisualRegressionHelper {
   private static final Logger logger = LoggerFactory.getLogger(VisualRegressionHelper.class);
@@ -30,13 +30,15 @@ public class VisualRegressionHelper {
   public static boolean verifyScreen(AppiumDriver driver, String baselineName, double tolerance) {
     try {
       File baselineFile = new File(BASELINE_DIR + baselineName + ".png");
-      
+
       TakesScreenshot ts = (TakesScreenshot) driver;
       File actualFile = ts.getScreenshotAs(OutputType.FILE);
       BufferedImage actualImage = ImageIO.read(actualFile);
 
       if (!baselineFile.exists()) {
-        logger.warn("Baseline image not found. Saving current screen as baseline: {}", baselineFile.getPath());
+        logger.warn(
+            "Baseline image not found. Saving current screen as baseline: {}",
+            baselineFile.getPath());
         baselineFile.getParentFile().mkdirs();
         ImageIO.write(actualImage, "png", baselineFile);
         return true; // Auto-approve the first run
@@ -44,15 +46,22 @@ public class VisualRegressionHelper {
 
       BufferedImage baselineImage = ImageIO.read(baselineFile);
 
-      if (baselineImage.getWidth() != actualImage.getWidth() || baselineImage.getHeight() != actualImage.getHeight()) {
-        logger.error("Image dimensions mismatch. Baseline: {}x{}, Actual: {}x{}", 
-            baselineImage.getWidth(), baselineImage.getHeight(), actualImage.getWidth(), actualImage.getHeight());
+      if (baselineImage.getWidth() != actualImage.getWidth()
+          || baselineImage.getHeight() != actualImage.getHeight()) {
+        logger.error(
+            "Image dimensions mismatch. Baseline: {}x{}, Actual: {}x{}",
+            baselineImage.getWidth(),
+            baselineImage.getHeight(),
+            actualImage.getWidth(),
+            actualImage.getHeight());
         return false;
       }
 
       int diffPixels = 0;
       int totalPixels = baselineImage.getWidth() * baselineImage.getHeight();
-      BufferedImage diffImage = new BufferedImage(baselineImage.getWidth(), baselineImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+      BufferedImage diffImage =
+          new BufferedImage(
+              baselineImage.getWidth(), baselineImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 
       for (int y = 0; y < baselineImage.getHeight(); y++) {
         for (int x = 0; x < baselineImage.getWidth(); x++) {
@@ -69,7 +78,9 @@ public class VisualRegressionHelper {
       }
 
       double diffPercentage = ((double) diffPixels / totalPixels) * 100.0;
-      logger.info("Visual comparison for '{}': {}% difference", baselineName, String.format("%.2f", diffPercentage));
+      logger.info(
+          "Visual comparison for '{}': {}% difference",
+          baselineName, String.format("%.2f", diffPercentage));
 
       if (diffPercentage > tolerance) {
         File diffFile = new File(DIFF_DIR + baselineName + "_diff.png");

@@ -84,7 +84,7 @@ appium --address 127.0.0.1 --port 4723
 ```
 mobile-testing-framework/
 ├── src/
-│   ├── main/java/
+│   ├── main/java/com/mobile/testing/
 │   │   ├── exceptions/
 │   │   │   └── DriverException.java
 │   │   ├── listeners/
@@ -95,9 +95,10 @@ mobile-testing-framework/
 │   │       ├── GestureHelper.java
 │   │       ├── TestUtils.java
 │   │       ├── WaitHelper.java
-│   ├── test/java/com/example/
+│   ├── test/java/com/mobile/testing/tests/
 │   │   ├── BaseTest.java
-│   │   └── ExampleTest.java
+│   │   ├── ExampleTest.java
+│   │   └── IOSTest.java
 ├── reports/
 │   └── screenshots/
 ├── pom.xml
@@ -304,7 +305,7 @@ jobs:
           arch: x86_64
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: mvn clean test -Dplatform=android
+          script: mvn clean test -Dplatform=android -DsuiteXmlFile=testng-android.xml
 
       - name: Upload Allure Results
         if: always()
@@ -364,7 +365,7 @@ jobs:
         run: xcrun simctl list devices available  # xcrun xctrace lists Instruments targets, not simulators
 
       - name: Run iOS Tests
-        run: mvn clean test -Dplatform=ios
+        run: mvn clean test -Dplatform=ios -DsuiteXmlFile=testng-ios.xml
 
       - name: Upload Allure Results
         if: always()

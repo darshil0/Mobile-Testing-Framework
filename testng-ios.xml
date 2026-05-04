@@ -9,6 +9,7 @@
     <test name="iOS Tests">
         <parameter name="platform" value="ios"/>
         <classes>
+            <class name="com.mobile.testing.tests.SmokeTest"/>
             <class name="com.mobile.testing.tests.IOSTest"/>
         </classes>
     </test>
