@@ -11,6 +11,13 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
 
+    env:
+      # Override config.json defaults via the framework's env-var interpolation (${VAR:-default}).
+      # macOS-latest ships Xcode 16+ with iOS 18 simulators — iOS 16.0 is not available.
+      IOS_VERSION: "18.0"
+      IOS_DEVICE_NAME: "iPhone 16"
+      IOS_APP_PATH: ${{ github.workspace }}/app/app-debug.app  # Update to your actual .app path
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -32,13 +39,17 @@ jobs:
           npm install -g appium
           appium driver install xcuitest
           appium driver list --installed
+          # Export explicit paths so AppiumServerManager (AppiumServiceBuilder) can locate
+          # node and appium reliably across all shell contexts.
+          echo "NODE_PATH=$(which node)" >> $GITHUB_ENV
+          echo "APPIUM_JS_PATH=$(npm root -g)/appium/build/lib/main.js" >> $GITHUB_ENV
 
-      - name: List iOS Simulators
-        run: xcrun xctrace list devices
+      - name: List Available iOS Simulators
+        # xcrun simctl lists simulators; xcrun xctrace lists Instruments trace targets (wrong tool)
+        run: xcrun simctl list devices available
 
       - name: Run iOS Tests
-        run: |
-          mvn clean test -Dplatform=ios
+        run: mvn clean test -Dplatform=ios
 
       - name: Upload Allure Results
         if: always()
