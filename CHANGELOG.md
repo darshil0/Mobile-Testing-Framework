@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2026-05-04
+
+### Fixed
+- **CI/CD Reliability**: Fixed `pom.xml` `argLine` issue by using `maven-dependency-plugin` to provide a consistent path for the AspectJ weaver.
+- **Server Lifecycle**: Moved Appium server management to `BaseTest` (@BeforeSuite/@AfterSuite), making tests completely self-contained and eliminating "Connection Refused" errors in CI.
+- **Cross-Platform CI**: Added dedicated `ios-tests.yml` and optimized `android-tests.yml` for GitHub Actions.
+
+### Changed
+- Bumped project version to `1.7.1`.
+- Simplified CI/CD workflows by removing manual Appium start steps.
+
 ## [1.7.0] - 2026-05-04
 
 ### Added

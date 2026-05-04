@@ -37,7 +37,11 @@ public class DriverManager {
     }
 
     ConfigReader config = ConfigReader.getInstance();
-    URL appiumUrl = new URL(config.getAppiumUrl());
+    String url = AppiumServerManager.getServerUrl();
+    if (url == null) {
+      url = config.getAppiumUrl();
+    }
+    URL appiumUrl = new URL(url);
 
     logger.info("Initializing driver for platform: {}", platform);
 

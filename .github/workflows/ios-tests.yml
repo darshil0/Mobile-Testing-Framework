@@ -40,7 +40,6 @@ jobs:
           # The simulator is typically started automatically by Appium/XCUITest
           # but you can pre-start it if needed:
           # xcrun simctl boot "iPhone 15" || true
-          appium &
           mvn clean test -Dplatform=ios
 
       - name: Upload Allure Results
