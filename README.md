@@ -17,6 +17,8 @@ An Appium + TestNG framework for automating Android and iOS apps. Built around t
 | `TestListener` | `src/main/java/listeners/` | Logs test events; captures screenshot on failure and attaches to Allure |
 | `RetryAnalyzer` | `src/main/java/listeners/` | Retries failed tests based on config |
 | `AppiumServerManager` | `src/main/java/utils/` | Programmatic start/stop of Appium server |
+| `DeepLinkHelper` | `src/main/java/utils/` | Opens deep link URLs on Android and iOS |
+| `VisualRegressionHelper`| `src/main/java/utils/` | Baseline pixel-match image comparison |
 | `DriverException` | `src/main/java/exceptions/` | Typed exception for driver lifecycle errors |
 
 ---
@@ -237,6 +239,18 @@ TestUtils.sendKeys(element, "some text");     // clears before typing
 TestUtils.waitForElement(driver, element, 10);
 TestUtils.scrollToElement(driver, element);   // defaults to UP
 TestUtils.scrollToElement(driver, element, GestureHelper.Direction.DOWN);
+
+// Deep linking
+TestUtils.openDeepLink(driver, "myapp://profile");
+```
+
+### Visual Regression
+
+```java
+// Compares current screen with "home_screen.png" in src/test/resources/baselines/
+// Auto-saves baseline if missing. Allows 1.5% pixel difference tolerance.
+boolean matches = VisualRegressionHelper.verifyScreen(driver, "home_screen", 1.5);
+Assert.assertTrue(matches, "Visual mismatch detected");
 ```
 
 ### DriverManager

@@ -6,6 +6,8 @@ import com.google.gson.JsonParser;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -256,5 +258,44 @@ public class ConfigReader {
    */
   public boolean isFullReset() {
     return getCapability(TEST_SETTINGS, FULL_RESET, JsonElement::getAsBoolean).orElse(false);
+  }
+
+  /**
+   * Gets all capabilities defined under a platform section as a Map.
+   * Useful for reading nested cloud provider options (e.g. bstack:options).
+   *
+   * @param platform The platform key (e.g., "android", "testSettings").
+   * @return A map of capabilities.
+   */
+  public Map<String, Object> getPlatformCapabilities(String platform) {
+    Map<String, Object> capabilities = new HashMap<>();
+    JsonObject platformConfig = config.getAsJsonObject(platform);
+    
+    if (platformConfig != null) {
+      for (Map.Entry<String, JsonElement> entry : platformConfig.entrySet()) {
+        capabilities.put(entry.getKey(), parseJsonElement(entry.getValue()));
+      }
+    }
+    return capabilities;
+  }
+
+  private Object parseJsonElement(JsonElement element) {
+    if (element.isJsonPrimitive()) {
+      com.google.gson.JsonPrimitive primitive = element.getAsJsonPrimitive();
+      if (primitive.isBoolean()) return primitive.getAsBoolean();
+      if (primitive.isNumber()) {
+        double d = primitive.getAsDouble();
+        if (d == (long) d) return (long) d;
+        return d;
+      }
+      return resolveEnvironmentVariable(primitive.getAsString());
+    } else if (element.isJsonObject()) {
+      Map<String, Object> map = new HashMap<>();
+      for (Map.Entry<String, JsonElement> entry : element.getAsJsonObject().entrySet()) {
+        map.put(entry.getKey(), parseJsonElement(entry.getValue()));
+      }
+      return map;
+    }
+    return null;
   }
 }

@@ -120,4 +120,20 @@ public class TestUtils {
   public static void scrollToElement(AppiumDriver driver, WebElement element) {
     GestureHelper.scrollToElement(driver, element);
   }
+
+  /**
+   * Navigates to a deep link in the application.
+   *
+   * @param driver The AppiumDriver.
+   * @param url The deep link URL.
+   */
+  public static void openDeepLink(AppiumDriver driver, String url) {
+    ConfigReader config = ConfigReader.getInstance();
+    String platformName = driver.getCapabilities().getPlatformName().toString();
+    String appPackage = "android".equalsIgnoreCase(platformName)
+        ? config.getPlatformCapability("android", "appPackage")
+        : config.getPlatformCapability("ios", "bundleId");
+
+    DeepLinkHelper.openDeepLink(driver, url, appPackage);
+  }
 }

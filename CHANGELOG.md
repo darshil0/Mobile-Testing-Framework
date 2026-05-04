@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2026-05-04
+
+### Added
+- **Deep Link Navigation**: Introduced `DeepLinkHelper` and `TestUtils.openDeepLink()` to automatically route URLs on Android and iOS devices.
+- **Visual Regression Testing**: Added `VisualRegressionHelper` for pixel-perfect image comparison with baselines, allowing automated UI validation.
+- **Parallel Grid / Cloud Execution**: `DriverManager` now automatically parses and injects complex JSON configurations (like `bstack:options` or `sauce:options`) from `config.json` directly into Driver capabilities.
+
+### Changed
+- Bumped project version to `1.8.0`, completing all major planned enhancements.
+
 ## [1.7.3] - 2026-05-04
 
 ### Changed

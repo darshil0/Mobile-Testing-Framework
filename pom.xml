@@ -7,7 +7,7 @@
 
     <groupId>com.mobile.testing</groupId>
     <artifactId>mobile-testing-framework</artifactId>
-    <version>1.7.3</version>
+    <version>1.8.0</version>
     <packaging>jar</packaging>
 
     <name>Mobile Testing Framework</name>
