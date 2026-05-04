@@ -44,7 +44,6 @@ public class TestUtils {
   }
 
   public static void scrollToElement(AppiumDriver driver, WebElement element) {
-    // Platform-specific scroll implementation would go here
-    // This is a placeholder
+    GestureHelper.scrollToElement(driver, element);
   }
 }

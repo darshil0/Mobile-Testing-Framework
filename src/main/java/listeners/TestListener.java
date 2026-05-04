@@ -1,4 +1,4 @@
-package utils;
+package listeners;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import utils.DriverManager;
 
 /**
  * TestNG listener for logging test events and taking screenshots on failure. Handles test lifecycle
