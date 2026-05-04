@@ -289,15 +289,16 @@ public class WaitHelper {
    * @param driver The Appium driver.
    * @param element The element to wait for.
    * @param timeoutInSeconds Custom timeout in seconds.
+   * @return {@code true} if the element is invisible, {@code false} otherwise.
    */
-  public static void waitForElementToBeInvisible(
+  public static boolean waitForElementToBeInvisible(
       AppiumDriver driver, WebElement element, int timeoutInSeconds) {
     try {
       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
-      wait.until(ExpectedConditions.invisibilityOf(element));
+      return wait.until(ExpectedConditions.invisibilityOf(element));
     } catch (Exception e) {
       logger.error("Element still visible after {} seconds", timeoutInSeconds, e);
-      throw e;
+      return false;
     }
   }
 
@@ -306,9 +307,10 @@ public class WaitHelper {
    *
    * @param driver The Appium driver.
    * @param element The element to wait for.
+   * @return {@code true} if the element is invisible, {@code false} otherwise.
    */
-  public static void waitForElementToBeInvisible(AppiumDriver driver, WebElement element) {
-    waitForElementToBeInvisible(driver, element, getDefaultTimeout());
+  public static boolean waitForElementToBeInvisible(AppiumDriver driver, WebElement element) {
+    return waitForElementToBeInvisible(driver, element, getDefaultTimeout());
   }
 
   /**
@@ -342,12 +344,13 @@ public class WaitHelper {
    * @param timeoutInSeconds Custom timeout in seconds.
    * @param condition The condition to wait for.
    * @param <T> The return type of the condition.
+   * @return The result of the condition.
    */
-  public static <T> void customWait(
+  public static <T> T customWait(
       AppiumDriver driver, int timeoutInSeconds, ExpectedCondition<T> condition) {
     try {
       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
-      wait.until(condition);
+      return wait.until(condition);
     } catch (Exception e) {
       logger.error("Custom wait condition not met within {} seconds", timeoutInSeconds, e);
       throw e;

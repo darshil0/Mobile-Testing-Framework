@@ -75,13 +75,15 @@ Edit `config/config.json`:
   },
   "appiumServer": {
     "host": "127.0.0.1",
-    "port": "4723"
+    "port": "4723",
+    "path": "/wd/hub"
   },
   "testSettings": {
     "implicitWait": 15,
     "explicitWait": 30,
     "screenshotOnFailure": true,
-    "noReset": true
+    "noReset": true,
+    "fullReset": false
   }
 }
 ```
@@ -191,11 +193,12 @@ WebElement btn = WaitHelper.waitForClickability(driver, locator, 10);
 // DOM presence (not necessarily visible)
 WebElement item = WaitHelper.waitForPresence(driver, locator, 10);
 
-// Disappearance
+// Disappearance — returns boolean
 boolean gone = WaitHelper.waitForElementToDisappear(driver, locator, 10);
+boolean invisible = WaitHelper.waitForElementToBeInvisible(driver, element, 10);
 
-// Custom condition
-WaitHelper.customWait(driver, 10, ExpectedConditions.titleContains("Home"));
+// Custom condition — returns the condition result (WebElement, Boolean, etc.)
+WebElement el = WaitHelper.customWait(driver, 10, ExpectedConditions.elementToBeClickable(locator));
 ```
 
 ### GestureHelper
@@ -217,8 +220,9 @@ GestureHelper.tap(driver, element);
 GestureHelper.longPress(driver, element, 3);
 GestureHelper.longPress(driver, element, Duration.ofSeconds(3));
 
-// Scroll until element is visible
+// Scroll until element is visible (defaults to UP)
 GestureHelper.scrollToElement(driver, element);
+GestureHelper.scrollToElement(driver, element, GestureHelper.Direction.DOWN);
 ```
 
 ### TestUtils
@@ -228,7 +232,8 @@ TestUtils.takeScreenshot(driver, "checkout_page");
 TestUtils.clickElement(driver, element);      // waits for clickability first
 TestUtils.sendKeys(element, "some text");     // clears before typing
 TestUtils.waitForElement(driver, element, 10);
-TestUtils.scrollToElement(driver, element);
+TestUtils.scrollToElement(driver, element);   // defaults to UP
+TestUtils.scrollToElement(driver, element, Direction.DOWN);
 ```
 
 ### DriverManager

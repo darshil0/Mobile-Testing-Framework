@@ -30,10 +30,12 @@ public class ConfigReader {
   private static final String TEST_SETTINGS = "testSettings";
   private static final String HOST = "host";
   private static final String PORT = "port";
+  private static final String PATH = "path";
   private static final String IMPLICIT_WAIT = "implicitWait";
   private static final String EXPLICIT_WAIT = "explicitWait";
   private static final String SCREENSHOT_ON_FAILURE = "screenshotOnFailure";
   private static final String NO_RESET = "noReset";
+  private static final String FULL_RESET = "fullReset";
 
   /**
    * Private constructor to prevent instantiation from outside. Loads the config.json file and
@@ -185,6 +187,7 @@ public class ConfigReader {
 
     JsonElement hostElement = appiumConfig.get(HOST);
     JsonElement portElement = appiumConfig.get(PORT);
+    JsonElement pathElement = appiumConfig.get(PATH);
 
     if (hostElement == null || portElement == null) {
       throw new RuntimeException("Appium host or port missing in config.json");
@@ -192,7 +195,15 @@ public class ConfigReader {
 
     String host = resolveEnvironmentVariable(hostElement.getAsString());
     String port = resolveEnvironmentVariable(portElement.getAsString());
-    return String.format("http://%s:%s", host, port);
+    String path = (pathElement != null && !pathElement.isJsonNull()) 
+        ? resolveEnvironmentVariable(pathElement.getAsString()) 
+        : "";
+
+    if (!path.isEmpty() && !path.startsWith("/")) {
+      path = "/" + path;
+    }
+
+    return String.format("http://%s:%s%s", host, port, path);
   }
 
   /**
@@ -233,5 +244,17 @@ public class ConfigReader {
    */
   public boolean isNoReset() {
     return getCapability(TEST_SETTINGS, NO_RESET, JsonElement::getAsBoolean).orElse(false);
+  }
+
+  /**
+   * Returns the {@code fullReset} flag from the {@code testSettings} section of {@code config.json}.
+   *
+   * <p>When {@code true}, Appium will perform a full reset (uninstall and reinstall) before
+   * every session. Defaults to {@code false} if the key is absent.
+   *
+   * @return {@code true} if the app should be fully reset between sessions.
+   */
+  public boolean isFullReset() {
+    return getCapability(TEST_SETTINGS, FULL_RESET, JsonElement::getAsBoolean).orElse(false);
   }
 }

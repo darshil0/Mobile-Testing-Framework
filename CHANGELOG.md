@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2026-05-04
+
+### Added
+- Added `GestureHelper.Direction` enum for type-safe scroll and swipe directions.
+- Enhanced `GestureHelper.scrollToElement` to support custom directions (`UP`, `DOWN`, `LEFT`, `RIGHT`).
+- Added `ConfigReader.isFullReset()` to retrieve global reset settings from `testSettings`.
+- Added support for optional `path` in `appiumServer` configuration within `config.json`.
+
+### Changed
+- Refactored `WaitHelper` methods: `customWait` now returns the result of the condition, and `waitForElementToBeInvisible` returns a boolean status.
+- Updated `DriverManager` to prioritize `testSettings` for `noReset` and `fullReset` capabilities, ensuring consistency across platforms.
+- Exposed `scrollToElement(driver, element, direction)` in `TestUtils`.
+- Bumped project version to `1.6.0`.
+
+### Fixed
+- Fixed capability resolution in `DriverManager`: `noReset` and `fullReset` now correctly pull from `testSettings` as documented.
+- Fixed `ConfigReader.getAppiumUrl()` to correctly handle cases where the Appium server requires a base path (e.g., `/wd/hub`).
+
 ## [1.5.2] - 2026-05-04
 
 ### Fixed

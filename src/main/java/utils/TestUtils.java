@@ -99,8 +99,20 @@ public class TestUtils {
   }
 
   /**
-   * Scrolls the screen until {@code element} is visible by delegating to
-   * {@link GestureHelper#scrollToElement(AppiumDriver, WebElement)}.
+   * Scrolls the screen in the specified {@code direction} until {@code element} is visible.
+   *
+   * @param driver The Appium driver.
+   * @param element The element to scroll to.
+   * @param direction The direction to swipe in while searching (e.g. {@code Direction.UP}).
+   */
+  public static void scrollToElement(
+      AppiumDriver driver, WebElement element, GestureHelper.Direction direction) {
+    GestureHelper.scrollToElement(driver, element, direction);
+  }
+
+  /**
+   * Scrolls the screen until {@code element} is visible by delegating to {@link
+   * GestureHelper#scrollToElement(AppiumDriver, WebElement)}. Default direction is {@code UP}.
    *
    * @param driver The Appium driver.
    * @param element The element to scroll to.

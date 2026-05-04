@@ -160,20 +160,42 @@ public class GestureHelper {
     }
   }
 
+  /** Enum for scroll and swipe directions. */
+  public enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+  }
+
   /**
-   * Scrolls to an element by swiping up until the element is visible.
+   * Scrolls the screen in the specified direction until the element is visible.
    *
    * @param driver The Appium driver.
    * @param element The element to scroll to.
+   * @param direction The direction to swipe in while searching for the element.
    */
-  public static void scrollToElement(AppiumDriver driver, WebElement element) {
+  public static void scrollToElement(AppiumDriver driver, WebElement element, Direction direction) {
     try {
-      logger.info("Scrolling to element");
+      logger.info("Scrolling {} to find element", direction);
       int maxScrolls = 10;
       int scrollCount = 0;
 
       while (!isElementInView(element) && scrollCount < maxScrolls) {
-        swipeUp(driver);
+        switch (direction) {
+          case UP:
+            swipeUp(driver);
+            break;
+          case DOWN:
+            swipeDown(driver);
+            break;
+          case LEFT:
+            swipeLeft(driver);
+            break;
+          case RIGHT:
+            swipeRight(driver);
+            break;
+        }
         scrollCount++;
       }
 
@@ -184,6 +206,16 @@ public class GestureHelper {
       logger.error("Failed to scroll to element", e);
       throw e;
     }
+  }
+
+  /**
+   * Scrolls the screen by swiping up until the element is visible.
+   *
+   * @param driver The Appium driver.
+   * @param element The element to scroll to.
+   */
+  public static void scrollToElement(AppiumDriver driver, WebElement element) {
+    scrollToElement(driver, element, Direction.UP);
   }
 
   private static Point getCenter(WebElement element) {

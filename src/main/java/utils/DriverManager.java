@@ -82,13 +82,10 @@ public class DriverManager {
     options.setPlatformVersion(config.getPlatformCapability(platform, "platformVersion"));
     options.setAutomationName(config.getPlatformCapability(platform, "automationName"));
 
-    options.setCapability(
-        "appium:deviceName", config.getPlatformCapability(platform, "deviceName"));
+    options.setCapability("appium:deviceName", config.getPlatformCapability(platform, "deviceName"));
     options.setCapability("appium:app", config.getPlatformCapability(platform, "app"));
-    options.setCapability(
-        "appium:noReset", config.getPlatformBooleanCapability(platform, "noReset", false));
-    options.setCapability(
-        "appium:fullReset", config.getPlatformBooleanCapability(platform, "fullReset", false));
+    options.setCapability("appium:noReset", config.isNoReset());
+    options.setCapability("appium:fullReset", config.isFullReset());
 
     int timeout = config.getPlatformIntCapability(platform, "newCommandTimeout", 300);
     options.setCapability("appium:newCommandTimeout", timeout);
