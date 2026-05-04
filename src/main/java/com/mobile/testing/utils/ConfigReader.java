@@ -3,9 +3,8 @@ package com.mobile.testing.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -14,9 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * Handles reading and parsing the configuration file (config.json). This class follows the
@@ -205,9 +201,10 @@ public class ConfigReader {
 
     String host = resolveEnvironmentVariable(hostElement.getAsString());
     String port = resolveEnvironmentVariable(portElement.getAsString());
-    String path = (pathElement != null && !pathElement.isJsonNull()) 
-        ? resolveEnvironmentVariable(pathElement.getAsString()) 
-        : "";
+    String path =
+        (pathElement != null && !pathElement.isJsonNull())
+            ? resolveEnvironmentVariable(pathElement.getAsString())
+            : "";
 
     if (!path.isEmpty() && !path.startsWith("/")) {
       path = "/" + path;
@@ -247,8 +244,8 @@ public class ConfigReader {
   /**
    * Returns the {@code noReset} flag from the {@code testSettings} section of {@code config.json}.
    *
-   * <p>When {@code true}, Appium will not reset the app state between sessions, which avoids a
-   * full reinstall and speeds up test execution. Defaults to {@code false} if the key is absent.
+   * <p>When {@code true}, Appium will not reset the app state between sessions, which avoids a full
+   * reinstall and speeds up test execution. Defaults to {@code false} if the key is absent.
    *
    * @return {@code true} if the app should not be reset between sessions.
    */
@@ -257,10 +254,11 @@ public class ConfigReader {
   }
 
   /**
-   * Returns the {@code fullReset} flag from the {@code testSettings} section of {@code config.json}.
+   * Returns the {@code fullReset} flag from the {@code testSettings} section of {@code
+   * config.json}.
    *
-   * <p>When {@code true}, Appium will perform a full reset (uninstall and reinstall) before
-   * every session. Defaults to {@code false} if the key is absent.
+   * <p>When {@code true}, Appium will perform a full reset (uninstall and reinstall) before every
+   * session. Defaults to {@code false} if the key is absent.
    *
    * @return {@code true} if the app should be fully reset between sessions.
    */
@@ -269,8 +267,8 @@ public class ConfigReader {
   }
 
   /**
-   * Gets all capabilities defined under a platform section as a Map.
-   * Useful for reading nested cloud provider options (e.g. bstack:options).
+   * Gets all capabilities defined under a platform section as a Map. Useful for reading nested
+   * cloud provider options (e.g. bstack:options).
    *
    * @param platform The platform key (e.g., "android", "testSettings").
    * @return A map of capabilities.
@@ -278,7 +276,7 @@ public class ConfigReader {
   public Map<String, Object> getPlatformCapabilities(String platform) {
     Map<String, Object> capabilities = new HashMap<>();
     JsonObject platformConfig = config.getAsJsonObject(platform);
-    
+
     if (platformConfig != null) {
       for (Map.Entry<String, JsonElement> entry : platformConfig.entrySet()) {
         capabilities.put(entry.getKey(), parseJsonElement(entry.getValue()));

@@ -7,9 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Utility for triggering deep links on both Android and iOS platforms.
- */
+/** Utility for triggering deep links on both Android and iOS platforms. */
 public class DeepLinkHelper {
   private static final Logger logger = LoggerFactory.getLogger(DeepLinkHelper.class);
 
@@ -25,27 +23,30 @@ public class DeepLinkHelper {
 
     if (driver instanceof AndroidDriver) {
       // Android specific deep link trigger via adb shell
-      Map<String, String> args = Map.of(
-          "url", url,
-          "package", appPackage
-      );
+      Map<String, String> args =
+          Map.of(
+              "url", url,
+              "package", appPackage);
       driver.executeScript("mobile: deepLink", args);
     } else if (driver instanceof IOSDriver) {
       // iOS specific deep link trigger via Safari or direct executeScript
       // Note: In modern Appium, the 'mobile: deepLink' is also supported for iOS
-      Map<String, String> args = Map.of(
-          "url", url,
-          "bundleId", appPackage
-      );
+      Map<String, String> args =
+          Map.of(
+              "url", url,
+              "bundleId", appPackage);
       try {
         driver.executeScript("mobile: deepLink", args);
       } catch (Exception e) {
-        logger.warn("mobile: deepLink failed, falling back to traditional iOS URL opening: {}", e.getMessage());
+        logger.warn(
+            "mobile: deepLink failed, falling back to traditional iOS URL opening: {}",
+            e.getMessage());
         driver.get(url);
       }
     } else {
       logger.error("Unsupported driver type for deep linking: {}", driver.getClass().getName());
-      throw new UnsupportedOperationException("Deep links are only supported on AndroidDriver and IOSDriver");
+      throw new UnsupportedOperationException(
+          "Deep links are only supported on AndroidDriver and IOSDriver");
     }
   }
 }

@@ -7,9 +7,7 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Utility to programmatically start and stop the Appium server.
- */
+/** Utility to programmatically start and stop the Appium server. */
 public class AppiumServerManager {
   private static final Logger logger = LoggerFactory.getLogger(AppiumServerManager.class);
   private static AppiumDriverLocalService service;
@@ -19,14 +17,14 @@ public class AppiumServerManager {
     if (service == null || !service.isRunning()) {
       logger.info("Starting Appium server...");
       AppiumServiceBuilder builder = new AppiumServiceBuilder();
-      
+
       // CI Hardening: Ensure we find node and appium in different environments
       String nodePath = System.getenv("NODE_PATH");
       String appiumJSPath = System.getenv("APPIUM_JS_PATH");
-      
+
       if (nodePath != null) builder.usingDriverExecutable(new File(nodePath));
       if (appiumJSPath != null) builder.withAppiumJS(new File(appiumJSPath));
-      
+
       builder.withIPAddress("127.0.0.1");
       builder.usingAnyFreePort();
       builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);

@@ -9,6 +9,7 @@
     <test name="Android Tests">
         <parameter name="platform" value="android"/>
         <classes>
+            <class name="com.mobile.testing.tests.SmokeTest"/>
             <class name="com.mobile.testing.tests.ExampleTest"/>
         </classes>
     </test>
@@ -16,6 +17,7 @@
     <test name="iOS Tests">
         <parameter name="platform" value="ios"/>
         <classes>
+            <class name="com.mobile.testing.tests.SmokeTest"/>
             <class name="com.mobile.testing.tests.IOSTest"/>
         </classes>
     </test>

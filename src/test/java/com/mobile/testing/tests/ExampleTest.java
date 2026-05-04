@@ -1,10 +1,10 @@
 package com.mobile.testing.tests;
 
+import com.mobile.testing.utils.WaitHelper;
 import io.appium.java_client.AppiumBy;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import com.mobile.testing.utils.WaitHelper;
 
 public class ExampleTest extends BaseTest {
 

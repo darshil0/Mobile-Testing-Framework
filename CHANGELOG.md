@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.3] - 2026-05-04
+
+### Fixed
+- **CI/CD — Android runner** (`android-tests.yml`): Standardized `NODE_PATH` and `APPIUM_JS_PATH` exports and updated the test command to use the dedicated `testng-android.xml` suite for better control.
+- **Documentation** (`README.md`): Synchronized the project structure diagram with the actual `com.mobile.testing` package naming and updated GitHub Actions examples to reflect the latest test commands.
+
+### Added
+- **Smoke Test**: Introduced `SmokeTest.java` to verify framework integrity and driver initialization without requiring full app flows.
+
+### Changed
+- Bumped project version to `1.8.3`.
+
 ## [1.8.2] - 2026-05-04
 
 ### Fixed
