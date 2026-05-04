@@ -109,6 +109,35 @@ public class WaitHelper {
   }
 
   /**
+   * Waits for an element located by a locator to be clickable using a custom timeout.
+   *
+   * @param driver The Appium driver.
+   * @param locator The locator of the element.
+   * @param timeoutInSeconds The custom timeout in seconds.
+   */
+  public static void waitForElementToBeClickable(
+      AppiumDriver driver, By locator, int timeoutInSeconds) {
+    try {
+      WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
+      wait.until(ExpectedConditions.elementToBeClickable(locator));
+    } catch (Exception e) {
+      logger.error(
+          "Element with locator {} not clickable within {} seconds", locator, timeoutInSeconds, e);
+      throw e;
+    }
+  }
+
+  /**
+   * Waits for an element located by a locator to be clickable using the default timeout.
+   *
+   * @param driver The Appium driver.
+   * @param locator The locator of the element.
+   */
+  public static void waitForElementToBeClickable(AppiumDriver driver, By locator) {
+    waitForElementToBeClickable(driver, locator, getDefaultTimeout());
+  }
+
+  /**
    * Waits for an element to be invisible using a custom timeout.
    *
    * @param driver The Appium driver.

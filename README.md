@@ -541,6 +541,13 @@ caps.setCapability("resetKeyboard", true);
 
 ## Changelog
 
+### Version 1.5.1 (2026-05-04)
+- ✨ **Structure Alignment:** Moved `TestListener` to `src/main/java/listeners/` to match framework documentation.
+- 🔧 **Logic Improvements:** Enhanced `ConfigReader` with regex-based environment variable resolution and better null safety.
+- 🔧 **Utility Enhancements:** Implemented `scrollToElement` in `TestUtils` and added `By` locator support to `WaitHelper`.
+- 🔧 **Base Class Refinement:** Updated `BaseTest` to default to "android" platform.
+- 🎨 **Code Quality:** Applied Google Java Format across the entire codebase.
+
 ### Version 1.5.0 (2025-11-15)
 - 🚀 **Final Release:** This version consolidates all recent fixes and improvements into a single, stable release.
 - 🔧 **Dependency Resolution:** Resolved critical dependency conflicts between Appium (`9.3.0`) and Selenium (`4.19.0`) to ensure a stable build.

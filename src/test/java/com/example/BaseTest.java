@@ -13,6 +13,9 @@ public class BaseTest {
   @BeforeMethod
   @Parameters({"platform"})
   public void setUp(String platform) throws MalformedURLException {
+    if (platform == null || platform.isEmpty()) {
+      platform = "android";
+    }
     DriverManager.initializeDriver(platform);
     driver = DriverManager.getDriver();
   }

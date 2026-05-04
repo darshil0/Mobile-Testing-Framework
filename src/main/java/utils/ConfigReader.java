@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,7 +111,15 @@ public class ConfigReader {
   private <T> Optional<T> getCapability(
       String platform, String key, Function<JsonElement, T> converter) {
     try {
-      JsonElement element = config.getAsJsonObject(platform).get(key);
+      JsonObject platformConfig = config.getAsJsonObject(platform);
+      if (platformConfig == null) {
+        return Optional.empty();
+      }
+      JsonElement element = platformConfig.get(key);
+      if (element == null || element.isJsonNull()) {
+        return Optional.empty();
+      }
+
       if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
         String resolvedValue = resolveEnvironmentVariable(element.getAsString());
         JsonElement newElement;
@@ -131,22 +141,34 @@ public class ConfigReader {
 
   /**
    * Resolves environment variables in the config value. Supports the format
-   * ${ENV_VAR:-default_value}.
+   * ${ENV_VAR:-default_value} and can handle multiple placeholders in a single string.
    *
    * @param value The value to resolve.
    * @return The resolved value.
    */
   private String resolveEnvironmentVariable(String value) {
-    if (value == null || !value.startsWith("${") || !value.endsWith("}")) {
-      return value;
+    if (value == null) {
+      return null;
     }
-    String content = value.substring(2, value.length() - 1);
-    String[] parts = content.split(":-", 2);
-    String envVar = parts[0];
-    String defaultValue = parts.length > 1 ? parts[1] : null;
 
-    String envValue = System.getenv(envVar);
-    return envValue != null ? envValue : System.getProperty(envVar, defaultValue);
+    Pattern pattern = Pattern.compile("\\$\\{([^:}]+)(?::-([^}]*))?\\}");
+    Matcher matcher = pattern.matcher(value);
+    StringBuilder sb = new StringBuilder();
+
+    while (matcher.find()) {
+      String envVar = matcher.group(1);
+      String defaultValue = matcher.group(2);
+
+      String envValue = System.getenv(envVar);
+      if (envValue == null) {
+        envValue = System.getProperty(envVar, defaultValue);
+      }
+
+      matcher.appendReplacement(
+          sb, envValue != null ? Matcher.quoteReplacement(envValue) : matcher.group(0));
+    }
+    matcher.appendTail(sb);
+    return sb.toString();
   }
 
   /**
@@ -156,8 +178,19 @@ public class ConfigReader {
    */
   public String getAppiumUrl() {
     JsonObject appiumConfig = config.getAsJsonObject(APPIUM);
-    String host = resolveEnvironmentVariable(appiumConfig.get(HOST).getAsString());
-    String port = resolveEnvironmentVariable(appiumConfig.get(PORT).getAsString());
+    if (appiumConfig == null) {
+      throw new RuntimeException("Appium server configuration not found in config.json");
+    }
+
+    JsonElement hostElement = appiumConfig.get(HOST);
+    JsonElement portElement = appiumConfig.get(PORT);
+
+    if (hostElement == null || portElement == null) {
+      throw new RuntimeException("Appium host or port missing in config.json");
+    }
+
+    String host = resolveEnvironmentVariable(hostElement.getAsString());
+    String port = resolveEnvironmentVariable(portElement.getAsString());
     return String.format("http://%s:%s", host, port);
   }
 
