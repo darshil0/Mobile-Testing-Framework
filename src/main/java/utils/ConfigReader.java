@@ -33,6 +33,7 @@ public class ConfigReader {
   private static final String IMPLICIT_WAIT = "implicitWait";
   private static final String EXPLICIT_WAIT = "explicitWait";
   private static final String SCREENSHOT_ON_FAILURE = "screenshotOnFailure";
+  private static final String NO_RESET = "noReset";
 
   /**
    * Private constructor to prevent instantiation from outside. Loads the config.json file and
@@ -220,5 +221,17 @@ public class ConfigReader {
   public boolean isScreenshotOnFailure() {
     return getCapability(TEST_SETTINGS, SCREENSHOT_ON_FAILURE, JsonElement::getAsBoolean)
         .orElse(true);
+  }
+
+  /**
+   * Returns the {@code noReset} flag from the {@code testSettings} section of {@code config.json}.
+   *
+   * <p>When {@code true}, Appium will not reset the app state between sessions, which avoids a
+   * full reinstall and speeds up test execution. Defaults to {@code false} if the key is absent.
+   *
+   * @return {@code true} if the app should not be reset between sessions.
+   */
+  public boolean isNoReset() {
+    return getCapability(TEST_SETTINGS, NO_RESET, JsonElement::getAsBoolean).orElse(false);
   }
 }
