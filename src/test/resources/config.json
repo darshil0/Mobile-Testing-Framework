@@ -10,8 +10,8 @@
   },
   "ios": {
     "platformName": "iOS",
-    "platformVersion": "${IOS_VERSION:-16.0}",
-    "deviceName": "iPhone 14",
+    "platformVersion": "${IOS_VERSION:-18.0}",
+    "deviceName": "${IOS_DEVICE_NAME:-iPhone 16}",
     "automationName": "XCUITest",
     "app": "${IOS_APP_PATH:-/path/to/your/app.app}",
     "bundleId": "com.example.app"
