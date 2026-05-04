@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.3] - 2026-05-04
+
+### Changed
+- **Project Maintenance**: Performed a clean-up of legacy test output artifacts (`test-output`, `reports/screenshots`, `allure-results`) to ensure a pristine workspace state.
+- Bumped project version to `1.7.3`.
+
 ## [1.7.2] - 2026-05-04
 
 ### Added
