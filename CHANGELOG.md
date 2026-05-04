@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.2] - 2026-05-04
+
+### Fixed
+- **CI/CD — Android runner**: Changed `android-tests.yml` runner from `ubuntu-latest` to `macos-latest`. The `reactivecircus/android-emulator-runner` action requires a macOS host to enable hardware-accelerated (KVM-equivalent) x86_64 emulators; Ubuntu runners do not support this and cause emulator boot failures.
+- **CI/CD — iOS workflow cleanup**: Removed a stray trailing-space comment on the Allure results path in `ios-tests.yml` that could confuse artifact upload path resolution on some runner configurations.
+
+### Changed
+- Bumped project version to `1.8.2`.
+
 ## [1.8.1] - 2026-05-04
 
 ### Changed
@@ -42,7 +51,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - **CI/CD reliability**: Fixed `pom.xml` `argLine` issue by using `maven‑dependency‑plugin` to provide a consistent path for the AspectJ weaver.
-- **Server lifecycle**: Moved Appium server management to `BaseTest` (`@BeforeSuite`/`@AfterSuite`), making tests completely self‑contained and eliminating “Connection Refused” errors in CI.
+- **Server lifecycle**: Moved Appium server management to `BaseTest` (`@BeforeSuite`/`@AfterSuite`), making tests completely self‑contained and eliminating "Connection Refused" errors in CI.
 - **Cross‑platform CI**: Added dedicated `ios-tests.yml` and optimized `android-tests.yml` for GitHub Actions.
 
 ### Changed
