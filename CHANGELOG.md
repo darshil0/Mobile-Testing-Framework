@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.1] - 2026-05-04
+
+### Changed
+- **Project Structure**: Refactored all source files to conform to standard Java conventions, placing them under the `com.mobile.testing` base package.
+- **Configuration Management**: Moved `config.json` from the root directory to `src/test/resources/config.json` to leverage Maven classpath loading. Updated `ConfigReader` accordingly.
+- Bumped project version to `1.8.1`.
+
 ## [1.8.0] - 2026-05-04
 
 ### Added

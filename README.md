@@ -8,18 +8,18 @@ An Appium + TestNG framework for automating Android and iOS apps. Built around t
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| `DriverManager` | `src/main/java/utils/` | Thread-safe driver init and teardown |
+| `DriverManager` | `src/main/java/com/mobile/testing/utils/` | Thread-safe driver initialization and contextual management |
 | `BaseTest` | `src/test/java/com/example/` | `@BeforeMethod`/`@AfterMethod` wiring |
-| `WaitHelper` | `src/main/java/utils/` | Explicit waits returning `WebElement` |
-| `GestureHelper` | `src/main/java/utils/` | W3C Actions: swipe, tap, long-press |
-| `TestUtils` | `src/main/java/utils/` | Screenshots, safe clicks, key entry |
-| `ConfigReader` | `src/main/java/utils/` | Singleton JSON config with env-var resolution |
-| `TestListener` | `src/main/java/listeners/` | Logs test events; captures screenshot on failure and attaches to Allure |
-| `RetryAnalyzer` | `src/main/java/listeners/` | Retries failed tests based on config |
-| `AppiumServerManager` | `src/main/java/utils/` | Programmatic start/stop of Appium server |
-| `DeepLinkHelper` | `src/main/java/utils/` | Opens deep link URLs on Android and iOS |
-| `VisualRegressionHelper`| `src/main/java/utils/` | Baseline pixel-match image comparison |
-| `DriverException` | `src/main/java/exceptions/` | Typed exception for driver lifecycle errors |
+| `WaitHelper` | `src/main/java/com/mobile/testing/utils/` | Explicit waits for elements (visibility, clickability, etc.) |
+| `GestureHelper` | `src/main/java/com/mobile/testing/utils/` | W3C Actions: swipe, tap, long-press |
+| `TestUtils` | `src/main/java/com/mobile/testing/utils/` | Screenshots, safe clicks, key entry |
+| `ConfigReader` | `src/main/java/com/mobile/testing/utils/` | Singleton JSON config with env-var resolution |
+| `TestListener` | `src/main/java/com/mobile/testing/listeners/` | Logs test events; captures screenshot on failure and attaches to Allure |
+| `RetryAnalyzer` | `src/main/java/com/mobile/testing/listeners/` | Retries failed tests based on config |
+| `AppiumServerManager` | `src/main/java/com/mobile/testing/utils/` | Programmatic start/stop of Appium server |
+| `DeepLinkHelper` | `src/main/java/com/mobile/testing/utils/` | Opens deep link URLs on Android and iOS |
+| `VisualRegressionHelper`| `src/main/java/com/mobile/testing/utils/` | Baseline pixel-match image comparison |
+| `DriverException` | `src/main/java/com/mobile/testing/exceptions/` | Typed exception for driver lifecycle errors |
 
 ---
 
@@ -56,44 +56,11 @@ mvn clean install
 
 ### 2. Configure your device
 
-Edit `config/config.json`:
+## Configuration
 
-```json
-{
-  "android": {
-    "platformName": "Android",
-    "platformVersion": "13.0",
-    "deviceName": "Android Emulator",
-    "automationName": "UiAutomator2",
-    "app": "/path/to/your/app.apk",
-    "appPackage": "com.example.app",
-    "appActivity": "com.example.app.MainActivity"
-  },
-  "ios": {
-    "platformName": "iOS",
-    "platformVersion": "16.0",
-    "deviceName": "iPhone 14",
-    "automationName": "XCUITest",
-    "app": "/path/to/your/app.app",
-    "bundleId": "com.example.app"
-  },
-  "appiumServer": {
-    "host": "127.0.0.1",
-    "port": "4723",
-    "path": "/wd/hub"
-  },
-  "testSettings": {
-    "implicitWait": 15,
-    "explicitWait": 30,
-    "screenshotOnFailure": true,
-    "noReset": true,
-    "fullReset": false,
-    "retryCount": 2
-  }
-}
-```
-
-Any value can be overridden by an environment variable using `${VAR_NAME:-default}` syntax. For example, setting `ANDROID_VERSION=14.0` in the environment overrides `platformVersion` without touching the file.
+Configuration is managed via a JSON file located at `src/test/resources/config.json`.
+The framework supports environment variable interpolation out-of-the-box (`${VAR_NAME:-default}`).
+ syntax. For example, setting `ANDROID_VERSION=14.0` in the environment overrides `platformVersion` without touching the file.
 
 ### 3. Start Appium
 
@@ -157,13 +124,13 @@ mobile-testing-framework/
 Extend `BaseTest`. The `platform` parameter is wired through `testng.xml` and defaults to `android` when absent.
 
 ```java
-package com.example;
+package com.mobile.testing.tests;
 
 import io.appium.java_client.AppiumBy;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.WaitHelper;
+import com.mobile.testing.utils.WaitHelper;
 
 public class LoginTest extends BaseTest {
 
