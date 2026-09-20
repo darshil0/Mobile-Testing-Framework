@@ -129,7 +129,11 @@ public class TestUtils {
    */
   public static void openDeepLink(AppiumDriver driver, String url) {
     ConfigReader config = ConfigReader.getInstance();
-    String platformName = driver.getCapabilities().getPlatformName().toString();
+    Object platformObj =
+        driver != null && driver.getCapabilities() != null
+            ? driver.getCapabilities().getPlatformName()
+            : null;
+    String platformName = platformObj != null ? platformObj.toString() : "";
     String appPackage =
         "android".equalsIgnoreCase(platformName)
             ? config.getPlatformCapability("android", "appPackage")

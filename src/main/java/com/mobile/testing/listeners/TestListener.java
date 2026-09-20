@@ -48,8 +48,10 @@ public class TestListener implements ITestListener {
       logger.error("Stack Trace: ", throwable);
     }
 
-    // Take screenshot on failure
-    takeScreenshot(result.getName());
+    // Take screenshot on failure if enabled in config
+    if (com.mobile.testing.utils.ConfigReader.getInstance().isScreenshotOnFailure()) {
+      takeScreenshot(result.getName());
+    }
 
     logger.error("========================================");
   }
