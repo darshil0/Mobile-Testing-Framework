@@ -11,10 +11,11 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
+/** Common Appium lifecycle for platform-specific tests. */
 public class BaseTest {
   protected AppiumDriver driver;
 
-  @BeforeSuite
+  @BeforeSuite(alwaysRun = true)
   public void beforeSuite() {
     AppiumServerManager.startServer();
   }
@@ -24,19 +25,18 @@ public class BaseTest {
     AppiumServerManager.stopServer();
   }
 
-  @BeforeMethod
-  @Parameters({"platform"})
+  @BeforeMethod(alwaysRun = true)
+  @Parameters("platform")
   public void setUp(@Optional("android") String platform) throws MalformedURLException {
-    if (platform == null || platform.isEmpty()) {
-      platform = "android";
-    }
-    DriverManager.initializeDriver(platform);
-    driver = DriverManager.getDriver();
+    String selectedPlatform = platform == null || platform.trim().isEmpty() ? "android" : platform;
+    DriverManager.initializeDriver(selectedPlatform.trim());
+    driver = DriverManager.requireDriver();
   }
 
-  @AfterMethod
+  @AfterMethod(alwaysRun = true)
   public void tearDown() {
     DriverManager.quitDriver();
+    driver = null;
   }
 
   public AppiumDriver getDriver() {

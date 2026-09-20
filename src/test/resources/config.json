@@ -2,11 +2,13 @@
   "android": {
     "platformName": "Android",
     "platformVersion": "${ANDROID_VERSION:-13.0}",
-    "deviceName": "Android Emulator",
+    "deviceName": "${ANDROID_DEVICE_NAME:-Android Emulator}",
     "automationName": "UiAutomator2",
     "app": "${ANDROID_APP_PATH:-/path/to/your/app.apk}",
-    "appPackage": "com.example.app",
-    "appActivity": "com.example.app.MainActivity"
+    "appPackage": "${ANDROID_APP_PACKAGE:-com.example.app}",
+    "appActivity": "${ANDROID_APP_ACTIVITY:-com.example.app.MainActivity}",
+    "autoGrantPermissions": true,
+    "newCommandTimeout": 300
   },
   "ios": {
     "platformName": "iOS",
@@ -14,16 +16,21 @@
     "deviceName": "${IOS_DEVICE_NAME:-iPhone 16}",
     "automationName": "XCUITest",
     "app": "${IOS_APP_PATH:-/path/to/your/app.app}",
-    "bundleId": "com.example.app"
+    "bundleId": "${IOS_BUNDLE_ID:-com.example.app}",
+    "autoAcceptAlerts": true,
+    "newCommandTimeout": 300
   },
   "appiumServer": {
     "host": "${APPIUM_HOST:-127.0.0.1}",
-    "port": "${APPIUM_PORT:-4723}"
+    "port": "${APPIUM_PORT:-4723}",
+    "path": "${APPIUM_PATH:-}"
   },
   "testSettings": {
-    "implicitWait": 15,
+    "implicitWait": 0,
     "explicitWait": 30,
     "screenshotOnFailure": true,
-    "noReset": true
+    "retryCount": 0,
+    "noReset": true,
+    "fullReset": false
   }
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Mobile Test Suite" parallel="false" verbose="1">
     <listeners>
         <listener class-name="com.mobile.testing.listeners.TestListener"/>
         <listener class-name="com.mobile.testing.listeners.AnnotationTransformer"/>
     </listeners>
 
+    <!-- The default suite is intentionally Android-only. Use the platform-specific suites for iOS. -->
     <test name="Android Tests">
         <parameter name="platform" value="android"/>
         <classes>
@@ -13,13 +14,4 @@
             <class name="com.mobile.testing.tests.ExampleTest"/>
         </classes>
     </test>
-    
-    <test name="iOS Tests">
-        <parameter name="platform" value="ios"/>
-        <classes>
-            <class name="com.mobile.testing.tests.SmokeTest"/>
-            <class name="com.mobile.testing.tests.IOSTest"/>
-        </classes>
-    </test>
-    
 </suite>

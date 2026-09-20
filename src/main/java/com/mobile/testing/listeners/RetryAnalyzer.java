@@ -4,26 +4,17 @@ import com.mobile.testing.utils.ConfigReader;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
-/**
- * Implementation of IRetryAnalyzer to automatically retry failed tests. The maximum retry count is
- * read from the configuration file.
- */
+/** Retries a failed test up to the configured number of times. */
 public class RetryAnalyzer implements IRetryAnalyzer {
-  private int count = 0;
-  private static final int MAX_RETRY_COUNT =
-      ConfigReader.getInstance().getPlatformIntCapability("testSettings", "retryCount", 0);
+  private int attempts;
 
   @Override
   public boolean retry(ITestResult result) {
-    if (!result.isSuccess()) {
-      if (count < MAX_RETRY_COUNT) {
-        count++;
-        result.setStatus(ITestResult.FAILURE);
-        return true;
-      }
-    } else {
-      result.setStatus(ITestResult.SUCCESS);
+    int maxRetries = ConfigReader.getInstance().getRetryCount();
+    if (result.isSuccess() || attempts >= maxRetries) {
+      return false;
     }
-    return false;
+    attempts++;
+    return true;
   }
 }
