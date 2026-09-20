@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 ## [1.8.3] - 2026-05-04
 
 ### Fixed
-- **CI/CD — Android runner** (`android-tests.yml`): Standardized `NODE_PATH` and `APPIUM_JS_PATH` exports and updated the test command to use the dedicated `testng-android.xml` suite for better control.
-- **Documentation** (`README.md`): Synchronized the project structure diagram with the actual `com.mobile.testing` package naming and updated GitHub Actions examples to reflect the latest test commands.
+- **Capabilities Duplication** (`DriverManager.java`): Prevented duplicate capability additions in `extraCaps` by excluding common capability keys already configured.
+- **Type Safety & Raw Types**: Cleaned up compilation warnings and raw type references across utility, test, and listener classes.
+- **Retry Mechanism** (`ConfigReader.java`, `ConfigSettings.java`, `AnnotationTransformer.java`): Added `getRetryCount()` method to `ConfigReader`, updated `ConfigSettings`, and fixed method call in `AnnotationTransformer`.
+- **TestListener**: Updated `onTestFailure` to check `ConfigReader.getInstance().isScreenshotOnFailure()` before taking failure screenshots.
+- **TestUtils Null Pointer Guard**: Added NPE checks on `driver`, `getCapabilities()`, and `getPlatformName()` in `TestUtils.openDeepLink()`.
+- **CI/CD — Android runner** (`android-tests.yml`): Added missing `env:` section with `ANDROID_VERSION`, `ANDROID_DEVICE_NAME`, and `ANDROID_APP_PATH` environment variables, and updated runner to `macos-13`.
+- **Documentation** (`README.md`): Updated project layout diagram to include resources directories.
+- **Orphaned Files**: Removed `package-lock.json`.
 
 ### Added
+- **Logging Configuration**: Added `src/main/resources/logback.xml` for proper console logging.
 - **Smoke Test**: Introduced `SmokeTest.java` to verify framework integrity and driver initialization without requiring full app flows.
 
 ### Changed

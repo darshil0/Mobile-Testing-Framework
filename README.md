@@ -50,15 +50,21 @@ To use an already-running Appium server, set `APPIUM_HOST`, `APPIUM_PORT`, and o
 ## Project layout
 
 ```text
-src/main/java/com/mobile/testing/
-├── exceptions/   DriverException
-├── listeners/    TestNG logging, screenshots, retry handling
-└── utils/        configuration, drivers, waits, gestures, deep links, visual checks
-src/test/java/com/mobile/testing/tests/
-├── BaseTest.java
-├── SmokeTest.java
-├── ExampleTest.java
-└── IOSTest.java
+src/main/
+├── java/com/mobile/testing/
+│   ├── exceptions/   DriverException
+│   ├── listeners/    TestNG logging, screenshots, retry handling
+│   └── utils/        configuration, drivers, waits, gestures, deep links, visual checks
+└── resources/
+    └── logback.xml
+src/test/
+├── java/com/mobile/testing/tests/
+│   ├── BaseTest.java
+│   ├── SmokeTest.java
+│   ├── ExampleTest.java
+│   └── IOSTest.java
+└── resources/
+    └── config.json
 ```
 
 ## Writing tests

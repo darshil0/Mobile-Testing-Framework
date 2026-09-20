@@ -8,8 +8,13 @@ on:
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: macos-13
     timeout-minutes: 45
+
+    env:
+      ANDROID_VERSION: "31"
+      ANDROID_DEVICE_NAME: "Nexus 6"
+      ANDROID_APP_PATH: ${{ github.workspace }}/app/app-debug.apk
 
     steps:
       - name: Checkout Repository

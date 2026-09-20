@@ -267,6 +267,15 @@ public class ConfigReader {
   }
 
   /**
+   * Gets the retry count for failed tests from test settings.
+   *
+   * @return The retry count, or 0 if not specified.
+   */
+  public int getRetryCount() {
+    return getCapability(TEST_SETTINGS, "retryCount", JsonElement::getAsInt).orElse(0);
+  }
+
+  /**
    * Gets all capabilities defined under a platform section as a Map. Useful for reading nested
    * cloud provider options (e.g. bstack:options).
    *

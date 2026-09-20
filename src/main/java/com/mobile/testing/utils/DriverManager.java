@@ -60,7 +60,12 @@ public class DriverManager {
             if (!"appPackage".equals(k)
                 && !"appActivity".equals(k)
                 && !"autoGrantPermissions".equals(k)
-                && !"platformName".equals(k)) {
+                && !"platformName".equals(k)
+                && !"platformVersion".equals(k)
+                && !"deviceName".equals(k)
+                && !"automationName".equals(k)
+                && !"app".equals(k)
+                && !"newCommandTimeout".equals(k)) {
               options.setCapability(k, v);
             }
           });
@@ -81,7 +86,12 @@ public class DriverManager {
           (k, v) -> {
             if (!"bundleId".equals(k)
                 && !"autoAcceptAlerts".equals(k)
-                && !"platformName".equals(k)) {
+                && !"platformName".equals(k)
+                && !"platformVersion".equals(k)
+                && !"deviceName".equals(k)
+                && !"automationName".equals(k)
+                && !"app".equals(k)
+                && !"newCommandTimeout".equals(k)) {
               options.setCapability(k, v);
             }
           });

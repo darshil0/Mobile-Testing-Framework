@@ -8,9 +8,10 @@ import org.testng.annotations.ITestAnnotation;
 /** Adds the configured retry analyzer to every TestNG test method. */
 public class AnnotationTransformer implements IAnnotationTransformer {
   @Override
+  @SuppressWarnings("rawtypes")
   public void transform(
       ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
-    if (annotation.getRetryAnalyzer() == null) {
+    if (annotation.getRetryAnalyzerClass() == null) {
       annotation.setRetryAnalyzer(RetryAnalyzer.class);
     }
   }
